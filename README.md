@@ -1,3 +1,6 @@
+ - [] Try deobfuscation using LLM or https://github.com/jehna/humanify
+
+
 # Hua
 Hua is an AI image editor with Stable Diffusion and more (Hua means paint in Chinese).
 
