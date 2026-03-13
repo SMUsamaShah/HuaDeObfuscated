@@ -1,19 +1,19 @@
 "use strict";
-function mylog(Z) {
+function mylog(eventName) {
   try {
     postRaw("https://plau.trueslow.com/api/event", {
-      name: Z,
+      name: eventName,
       url: window.location.href,
       domain: "painthua.com"
     });
-  } catch (h) {}
+  } catch (err) {}
 }
-console.img = function (Z) {
-  var h = new Image();
-  h.onload = function () {
-    console.log("%c ", "font-size:1px;padding: 64px 64px;background:url(" + Z + ") no-repeat;background-size:contain;");
+console.img = function (url) {
+  var img = new Image();
+  img.onload = function () {
+    console.log("%c ", "font-size:1px;padding: 64px 64px;background:url(" + url + ") no-repeat;background-size:contain;");
   };
-  h.src = Z;
+  img.src = url;
 };
 window.max = Math.max;
 window.min = Math.min;
@@ -24,218 +24,218 @@ window.ceil = Math.ceil;
 window.pow = Math.pow;
 window.sqrt = Math.sqrt;
 window.sign = Math.sign;
-window.postRaw = function (Z, h) {
-  return fetch(Z, {
+window.postRaw = function (url, data) {
+  return fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(h)
+    body: JSON.stringify(data)
   });
 };
-window.post = function (Z, h) {
-  return fetch(Z, {
+window.post = function (url, data) {
+  return fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(h)
-  }).then(w => w.json());
+    body: JSON.stringify(data)
+  }).then(res => res.json());
 };
-window.gget = function (Z) {
-  return fetch(Z, {
+window.gget = function (url) {
+  return fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
     }
-  }).then(h => h.json());
+  }).then(res => res.json());
 };
-function stringify(Z) {
-  return JSON.stringify(Z, null, 1).replaceAll("\n ", "\n").trim();
+function stringify(obj) {
+  return JSON.stringify(obj, null, 1).replaceAll("\n ", "\n").trim();
 }
 function getYMDHMS() {
-  var Z = new Date();
-  var h = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  var w = h[Z.getMonth()];
-  var v = Z.getDate();
-  var l = Z.getHours();
-  var g = Z.getMinutes();
-  var x = Z.getSeconds();
-  return Z.getFullYear() + "-" + w + "-" + (v > 9 ? "" : "0") + v + " " + [(l > 9 ? "" : "0") + l, (g > 9 ? "" : "0") + g, (x > 9 ? "" : "0") + x].join(":");
+  var now = new Date();
+  var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  var monthName = months[now.getMonth()];
+  var day = now.getDate();
+  var hours = now.getHours();
+  var minutes = now.getMinutes();
+  var seconds = now.getSeconds();
+  return now.getFullYear() + "-" + monthName + "-" + (day > 9 ? "" : "0") + day + " " + [(hours > 9 ? "" : "0") + hours, (minutes > 9 ? "" : "0") + minutes, (seconds > 9 ? "" : "0") + seconds].join(":");
 }
-function $(Z) {
-  return document.querySelector(Z);
+function $(selector) {
+  return document.querySelector(selector);
 }
-function $c(Z) {
-  Z = typeof Z === "string" ? $(Z) : Z;
-  return Z.classList;
+function $c(el) {
+  el = typeof el === "string" ? $(el) : el;
+  return el.classList;
 }
-$.parse = function (Z) {
-  return Z.replaceAll("L🖱️", "<img src=\"img/mouse_left.svg\" class=\"icon\">").replaceAll("R🖱️", "<img src=\"img/mouse_right.svg\" class=\"icon\">").replaceAll("🖱️wheel", "<img src=\"img/mouse_wheel.svg\" class=\"icon\">").replaceAll("🖱️", "<img src=\"img/mouse.svg\" class=\"icon\">");
+$.parse = function (text) {
+  return text.replaceAll("L🖱️", "<img src=\"img/mouse_left.svg\" class=\"icon\">").replaceAll("R🖱️", "<img src=\"img/mouse_right.svg\" class=\"icon\">").replaceAll("🖱️wheel", "<img src=\"img/mouse_wheel.svg\" class=\"icon\">").replaceAll("🖱️", "<img src=\"img/mouse.svg\" class=\"icon\">");
 };
-$.type = function (Z) {
-  Z = typeof Z === "string" ? $(Z) : Z;
-  return Z.tagName.toLowerCase();
+$.type = function (el) {
+  el = typeof el === "string" ? $(el) : el;
+  return el.tagName.toLowerCase();
 };
-$.show = function (Z) {
-  Z = typeof Z === "string" ? $(Z) : Z;
-  $c(Z).remove("hide");
+$.show = function (el) {
+  el = typeof el === "string" ? $(el) : el;
+  $c(el).remove("hide");
 };
-$.hide = function (Z) {
-  Z = typeof Z === "string" ? $(Z) : Z;
-  $c(Z).add("hide");
+$.hide = function (el) {
+  el = typeof el === "string" ? $(el) : el;
+  $c(el).add("hide");
 };
-$.setShow = function (Z, h) {
-  Z = typeof Z === "string" ? $(Z) : Z;
-  if (h) {
-    $.show(Z);
+$.setShow = function (el, visible) {
+  el = typeof el === "string" ? $(el) : el;
+  if (visible) {
+    $.show(el);
   } else {
-    $.hide(Z);
+    $.hide(el);
   }
 };
-$.isActive = function (Z) {
-  return $c("button[data-id=\"" + Z + "\"]").contains("active");
+$.isActive = function (btnId) {
+  return $c("button[data-id=\"" + btnId + "\"]").contains("active");
 };
-$.error = function (Z) {
-  $("#error_msg").innerHTML = $.parse(Z);
-  if (Z == "") {
+$.error = function (msg) {
+  $("#error_msg").innerHTML = $.parse(msg);
+  if (msg == "") {
     $.hide("#error");
   } else {
     $.show("#error");
   }
 };
-$.top_right = function (Z) {
-  $("#top_right").innerHTML = $.parse(Z);
-  if (Z == "") {
+$.top_right = function (msg) {
+  $("#top_right").innerHTML = $.parse(msg);
+  if (msg == "") {
     $.hide("#top_right");
   } else {
     $.show("#top_right");
   }
 };
-function preventDefault(Z) {
-  Z.preventDefault();
+function preventDefault(evt) {
+  evt.preventDefault();
 }
-$.size = function (Z) {
-  Z = typeof Z === "string" ? $(Z) : Z;
-  var h = window.getComputedStyle(Z);
+$.size = function (el) {
+  el = typeof el === "string" ? $(el) : el;
+  var style = window.getComputedStyle(el);
   return {
-    x: round(parseFloat(h.left)),
-    y: round(parseFloat(h.top)),
-    w: round(parseFloat(h.width)),
-    h: round(parseFloat(h.height))
+    x: round(parseFloat(style.left)),
+    y: round(parseFloat(style.top)),
+    w: round(parseFloat(style.width)),
+    h: round(parseFloat(style.height))
   };
 };
-function updateBOX(Z, h, w, v) {
-  var l = $.isActive("grid_mode");
-  var g;
-  var x;
-  var s;
-  var u;
-  var J = l ? GRIDSZ : 1;
-  var G = 4096;
-  var H = min(G, max(GRIDSZ, ceil(CFG.min_size / GRIDSZ) * GRIDSZ));
+function updateBOX(startX, startY, endX, endY) {
+  var gridMode = $.isActive("grid_mode");
+  var left;
+  var right;
+  var top;
+  var bottom;
+  var snapStep = gridMode ? GRIDSZ : 1;
+  var maxSize = 4096;
+  var minSize = min(maxSize, max(GRIDSZ, ceil(CFG.min_size / GRIDSZ) * GRIDSZ));
   if (gButton == 2) {
-    H = l ? GRIDSZ : 1;
+    minSize = gridMode ? GRIDSZ : 1;
   }
-  if (l || gButton == 2) {
-    if (l) {
-      if (w < Z && abs(w - Z) < GRIDSZ) {
-        w = Z;
+  if (gridMode || gButton == 2) {
+    if (gridMode) {
+      if (endX < startX && abs(endX - startX) < GRIDSZ) {
+        endX = startX;
       }
-      if (v < h && abs(v - h) < GRIDSZ) {
-        v = h;
+      if (endY < startY && abs(endY - startY) < GRIDSZ) {
+        endY = startY;
       }
     }
-    if (w >= Z) {
-      g = floor(Z / J) * J;
-      x = ceil(w / J) * J;
-      x = min(max(x, g + H), g + G);
+    if (endX >= startX) {
+      left = floor(startX / snapStep) * snapStep;
+      right = ceil(endX / snapStep) * snapStep;
+      right = min(max(right, left + minSize), left + maxSize);
     } else {
-      g = floor(w / J) * J;
-      x = ceil(Z / J) * J;
-      g = max(min(g, x - H), x - G);
+      left = floor(endX / snapStep) * snapStep;
+      right = ceil(startX / snapStep) * snapStep;
+      left = max(min(left, right - minSize), right - maxSize);
     }
-    if (v >= h) {
-      s = floor(h / J) * J;
-      u = ceil(v / J) * J;
-      u = min(max(u, s + H), s + G);
+    if (endY >= startY) {
+      top = floor(startY / snapStep) * snapStep;
+      bottom = ceil(endY / snapStep) * snapStep;
+      bottom = min(max(bottom, top + minSize), top + maxSize);
     } else {
-      s = floor(v / J) * J;
-      u = ceil(h / J) * J;
-      s = max(min(s, u - H), u - G);
+      top = floor(endY / snapStep) * snapStep;
+      bottom = ceil(startY / snapStep) * snapStep;
+      top = max(min(top, bottom - minSize), bottom - maxSize);
     }
   } else {
-    if (w >= Z) {
-      g = Z;
-      x = ceil((w - Z) / GRIDSZ) * GRIDSZ + Z;
-      x = min(max(x, g + H), g + G);
+    if (endX >= startX) {
+      left = startX;
+      right = ceil((endX - startX) / GRIDSZ) * GRIDSZ + startX;
+      right = min(max(right, left + minSize), left + maxSize);
     } else {
-      g = floor((w - Z) / GRIDSZ) * GRIDSZ + Z;
-      x = Z;
-      g = max(min(g, x - H), x - G);
+      left = floor((endX - startX) / GRIDSZ) * GRIDSZ + startX;
+      right = startX;
+      left = max(min(left, right - minSize), right - maxSize);
     }
-    if (v >= h) {
-      s = h;
-      u = ceil((v - h) / GRIDSZ) * GRIDSZ + h;
-      u = min(max(u, s + H), s + G);
+    if (endY >= startY) {
+      top = startY;
+      bottom = ceil((endY - startY) / GRIDSZ) * GRIDSZ + startY;
+      bottom = min(max(bottom, top + minSize), top + maxSize);
     } else {
-      s = floor((v - h) / GRIDSZ) * GRIDSZ + h;
-      u = h;
-      s = max(min(s, u - H), u - G);
+      top = floor((endY - startY) / GRIDSZ) * GRIDSZ + startY;
+      bottom = startY;
+      top = max(min(top, bottom - minSize), bottom - maxSize);
     }
   }
-  BOX.style.left = g + "px";
-  BOX.style.top = s + "px";
-  BOX.style.width = x - g + "px";
-  BOX.style.height = u - s + "px";
+  BOX.style.left = left + "px";
+  BOX.style.top = top + "px";
+  BOX.style.width = right - left + "px";
+  BOX.style.height = bottom - top + "px";
 }
 var CV = {
   changed: true
 };
 CV.save = function () {
-  var Z = null;
+  var canvas = null;
   if (!$.isActive("mask_draw") && !$.isActive("brush_draw") && gButton == 2) {
-    var h = $.size(BOX);
-    Z = CV.new(h.w, h.h);
-    Z.getContext("2d").drawImage(CV.main, h.x, h.y, h.w, h.h, 0, 0, h.w, h.h);
+    var boxSize = $.size(BOX);
+    canvas = CV.new(boxSize.w, boxSize.h);
+    canvas.getContext("2d").drawImage(CV.main, boxSize.x, boxSize.y, boxSize.w, boxSize.h, 0, 0, boxSize.w, boxSize.h);
   } else {
-    Z = CV.trim(CV.mainC);
-    if (!Z) {
+    canvas = CV.trim(CV.mainC);
+    if (!canvas) {
       $.error("Canvas is empty.");
       return;
     }
   }
-  var w = $("#save_canvas");
-  w.setAttribute("download", "Hua " + getYMDHMS() + ".png");
-  w.setAttribute("href", Z.toDataURL("image/png"));
-  w.click();
+  var link = $("#save_canvas");
+  link.setAttribute("download", "Hua " + getYMDHMS() + ".png");
+  link.setAttribute("href", canvas.toDataURL("image/png"));
+  link.click();
 };
-CV.loadBlob = function (Z, h, w = null) {
-  var v = new Image();
-  v.onload = function () {
-    var l = v.width;
-    var g = v.height;
-    if (Z == null) {
-      Z = CV.new(l, g).getContext("2d");
+CV.loadBlob = function (ctx, blob, callback = null) {
+  var img = new Image();
+  img.onload = function () {
+    var imgW = img.width;
+    var imgH = img.height;
+    if (ctx == null) {
+      ctx = CV.new(imgW, imgH).getContext("2d");
     }
-    Z.drawImage(v, 0, 0, l, g, 0, 0, l, g);
-    URL.revokeObjectURL(v.src);
-    if (w) {
-      w(Z.canvas);
+    ctx.drawImage(img, 0, 0, imgW, imgH, 0, 0, imgW, imgH);
+    URL.revokeObjectURL(img.src);
+    if (callback) {
+      callback(ctx.canvas);
     }
   };
-  v.onerror = function (l) {
+  img.onerror = function (imgW) {
     $.error("Invalid image file.");
-    URL.revokeObjectURL(v.src);
+    URL.revokeObjectURL(img.src);
   };
-  v.src = URL.createObjectURL(h);
+  img.src = URL.createObjectURL(blob);
 };
-CV.loadDataURL = function (Z, v, l, g, s, u) {
-  var J = new Image();
-  J.onload = function () {
-    Z.drawImage(J, l, g, s, u);
+CV.loadDataURL = function (ctx, dataUrl, dx, dy, dw, dh) {
+  var img = new Image();
+  img.onload = function () {
+    ctx.drawImage(img, dx, dy, dw, dh);
   };
-  J.src = v;
+  img.src = dataUrl;
 };
 CV.load = function () {
   if (App.eeMoving) {
@@ -243,38 +243,38 @@ CV.load = function () {
     return;
   }
   $.error("Loading image...");
-  CV.loadBlob(null, $("#imageLoader").files[0], Z => {
-    CV.loadToNew(Z);
+  CV.loadBlob(null, $("#imageLoader").files[0], canvas => {
+    CV.loadToNew(canvas);
   });
 };
-CV.loadToNew = function (Z) {
-  Z.style.left = gMouseNow.x + "px";
-  Z.style.top = gMouseNow.y + "px";
-  SKETCH.appendChild(Z);
-  App.eeMoving = Z;
+CV.loadToNew = function (canvas) {
+  canvas.style.left = gMouseNow.x + "px";
+  canvas.style.top = gMouseNow.y + "px";
+  SKETCH.appendChild(canvas);
+  App.eeMoving = canvas;
   $.error("L🖱️ to place, Ctrl+L🖱️ to place at center of canvas, R🖱️ to cancel.");
 };
 CV.copy = function () {
-  var Z = null;
+  var canvas = null;
   if (!$.isActive("mask_draw") && !$.isActive("brush_draw") && gButton == 2) {
-    var h = $.size(BOX);
-    Z = CV.new(h.w, h.h);
-    Z.getContext("2d").drawImage(CV.main, h.x, h.y, h.w, h.h, 0, 0, h.w, h.h);
+    var boxSize = $.size(BOX);
+    canvas = CV.new(boxSize.w, boxSize.h);
+    canvas.getContext("2d").drawImage(CV.main, boxSize.x, boxSize.y, boxSize.w, boxSize.h, 0, 0, boxSize.w, boxSize.h);
   } else {
-    Z = CV.trim(CV.mainC);
-    if (!Z) {
+    canvas = CV.trim(CV.mainC);
+    if (!canvas) {
       $.error("Canvas is empty.");
       return;
     }
   }
-  Z.toBlob(async l => {
+  canvas.toBlob(async blob => {
     try {
       await navigator.clipboard.write([new ClipboardItem({
-        [l.type]: l
+        [blob.type]: blob
       })]);
       $.error("Copied to clipboard.");
-    } catch (x) {
-      console.log(x);
+    } catch (err) {
+      console.log(err);
       $.error("This browser cannot access clipboard. Try Chrome, or save the image file instead.");
     }
   });
@@ -286,52 +286,52 @@ CV.paste = async function () {
   }
   $.error("Loading clipboard...");
   try {
-    const h = await navigator.clipboard.read();
-    for (const w of h) {
-      var Z = false;
-      for (const v of w.types) {
-        if (v === "image/png") {
-          Z = true;
-          CV.loadBlob(null, await w.getType(v), g => {
-            CV.loadToNew(g);
+    const clipItems = await navigator.clipboard.read();
+    for (const clipItem of clipItems) {
+      var isImage = false;
+      for (const mimeType of clipItem.types) {
+        if (mimeType === "image/png") {
+          isImage = true;
+          CV.loadBlob(null, await clipItem.getType(mimeType), canvas => {
+            CV.loadToNew(canvas);
           });
         }
       }
-      if (!Z) {
+      if (!isImage) {
         $.error("Clipboard does not contain image.");
       }
     }
-  } catch (x) {
-    console.log(x);
+  } catch (err) {
+    console.log(err);
     $.error("This browser cannot access clipboard. Try Chrome, or open the image file instead.");
   }
 };
 CV.snapshot = function () {
   if (!CV.changed) {
-    for (let Z of [CV.mainC, CV.maskC]) {
-      let h = Z.canvas;
-      if (h.snapshotIndex + 1 < h.snapshot.length) {
-        h.snapshot.length = h.snapshotIndex + 1;
+    for (let ctx of [CV.mainC, CV.maskC]) {
+      let canvas = ctx.canvas;
+      if (canvas.snapshotIndex + 1 < canvas.snapshot.length) {
+        canvas.snapshot.length = canvas.snapshotIndex + 1;
       }
     }
     CV.changed = true;
   } else {
-    for (let v of [CV.mainC, CV.maskC]) {
-      let l = v.canvas;
-      l.toBlob(g => {
-        if ("snapshot" in l) {
-          l.snapshotIndex += 1;
-          if (l.snapshotIndex > 9) {
-            l.snapshot.shift();
-            l.snapshotIndex = 9;
+    for (let ctx of [CV.mainC, CV.maskC]) {
+      let canvas = ctx.canvas;
+      canvas.toBlob(blob => {
+        if ("snapshot" in canvas) {
+          canvas.snapshotIndex += 1;
+          if (canvas.snapshotIndex > 9) {
+            canvas.snapshot.shift();
+            canvas.snapshotIndex = 9;
           }
-          if (l.snapshotIndex < l.snapshot.length) {
-            l.snapshot.length = l.snapshotIndex;
+          if (canvas.snapshotIndex < canvas.snapshot.length) {
+            canvas.snapshot.length = canvas.snapshotIndex;
           }
-          l.snapshot.push(g);
+          canvas.snapshot.push(blob);
         } else {
-          l.snapshotIndex = 0;
-          l.snapshot = [g];
+          canvas.snapshotIndex = 0;
+          canvas.snapshot = [blob];
         }
       });
     }
@@ -342,126 +342,126 @@ CV.undo = function () {
     $.error("Nothing to undo.");
     return;
   }
-  for (let Z of [CV.mainC, CV.maskC]) {
-    let h = Z.canvas;
+  for (let ctx of [CV.mainC, CV.maskC]) {
+    let canvas = ctx.canvas;
     try {
-      if (h.snapshotIndex == h.snapshot.length - 1 && CV.changed) {
-        h.toBlob(v => {
-          h.snapshot.push(v);
+      if (canvas.snapshotIndex == canvas.snapshot.length - 1 && CV.changed) {
+        canvas.toBlob(blob => {
+          canvas.snapshot.push(blob);
           CV.changed = false;
-          Z.clearRect(0, 0, Z.canvas.width, Z.canvas.height);
-          CV.loadBlob(Z, h.snapshot[h.snapshotIndex]);
+          ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+          CV.loadBlob(ctx, canvas.snapshot[canvas.snapshotIndex]);
         });
       } else {
-        if (h.snapshotIndex <= 0) {
+        if (canvas.snapshotIndex <= 0) {
           $.error("Undo limit reached.");
           return;
         }
-        h.snapshotIndex -= 1;
-        Z.clearRect(0, 0, Z.canvas.width, Z.canvas.height);
-        CV.loadBlob(Z, h.snapshot[h.snapshotIndex]);
+        canvas.snapshotIndex -= 1;
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        CV.loadBlob(ctx, canvas.snapshot[canvas.snapshotIndex]);
       }
-    } catch (g) {}
+    } catch (err) {}
   }
 };
 CV.redo = function () {
-  for (let Z of [CV.mainC, CV.maskC]) {
-    let w = Z.canvas;
-    if (!("snapshot" in w)) {
+  for (let ctx of [CV.mainC, CV.maskC]) {
+    let canvas = ctx.canvas;
+    if (!("snapshot" in canvas)) {
       $.error("Nothing to redo.");
       return;
     }
-    if (w.snapshotIndex >= w.snapshot.length - 1) {
+    if (canvas.snapshotIndex >= canvas.snapshot.length - 1) {
       $.error("This is already the latest canvas.");
       return;
     }
     try {
-      w.snapshotIndex += 1;
-      Z.clearRect(0, 0, Z.canvas.width, Z.canvas.height);
-      CV.loadBlob(Z, w.snapshot[w.snapshotIndex]);
-    } catch (g) {}
+      canvas.snapshotIndex += 1;
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      CV.loadBlob(ctx, canvas.snapshot[canvas.snapshotIndex]);
+    } catch (err) {}
   }
 };
-CV.noise = function (Z, v, l) {
-  var g = Z.createImageData(128, 128);
-  var x = new Uint8Array(g.data.buffer);
-  for (var s = 0; s < v; s += 128) {
-    for (var u = 0; u < l; u += 128) {
-      window.crypto.getRandomValues(x);
-      for (var J = 0; J < x.length; J += 4) {
-        x[J + 3] = 255;
+CV.noise = function (ctx, width, height) {
+  var imageData = ctx.createImageData(128, 128);
+  var pixels = new Uint8Array(imageData.data.buffer);
+  for (var col = 0; col < width; col += 128) {
+    for (var row = 0; row < height; row += 128) {
+      window.crypto.getRandomValues(pixels);
+      for (var i = 0; i < pixels.length; i += 4) {
+        pixels[i + 3] = 255;
       }
-      Z.putImageData(g, s, u);
+      ctx.putImageData(imageData, col, row);
     }
   }
 };
-CV.grid = function (Z) {
-  var v = Z.canvas.width;
-  var l = Z.canvas.height;
-  for (var g = 0; g < v / GRIDSZ; g++) {
-    for (var s = 0; s < l / GRIDSZ; s++) {
-      Z.fillStyle = (g + s) % 2 == 0 ? "#2f2f2f" : "#282828";
-      Z.fillRect(g * GRIDSZ, s * GRIDSZ, GRIDSZ, GRIDSZ);
+CV.grid = function (ctx) {
+  var width = ctx.canvas.width;
+  var height = ctx.canvas.height;
+  for (var col = 0; col < width / GRIDSZ; col++) {
+    for (var row = 0; row < height / GRIDSZ; row++) {
+      ctx.fillStyle = (col + row) % 2 == 0 ? "#2f2f2f" : "#282828";
+      ctx.fillRect(col * GRIDSZ, row * GRIDSZ, GRIDSZ, GRIDSZ);
     }
   }
 };
-CV.trim = function (Z) {
-  var h = CV.getTrimSize(Z);
-  if (h.w == 0 || h.h == 0) {
+CV.trim = function (ctx) {
+  var bounds = CV.getTrimSize(ctx);
+  if (bounds.w == 0 || bounds.h == 0) {
     return null;
   }
-  var w = CV.new(h.w, h.h);
-  w.getContext("2d").drawImage(Z.canvas, h.x, h.y, h.w, h.h, 0, 0, h.w, h.h);
-  return w;
+  var canvas = CV.new(bounds.w, bounds.h);
+  canvas.getContext("2d").drawImage(ctx.canvas, bounds.x, bounds.y, bounds.w, bounds.h, 0, 0, bounds.w, bounds.h);
+  return canvas;
 };
-CV.getTrimSize = function (Z) {
-  function h(H, f, T) {
-    for (var N = 0; N < f; ++N) {
-      if (H.data[T * f * 4 + N * 4 + 3] !== 0) {
+CV.getTrimSize = function (ctx) {
+  function isRowEmpty(imageData, width, row) {
+    for (var col = 0; col < width; ++col) {
+      if (imageData.data[row * width * 4 + col * 4 + 3] !== 0) {
         return false;
       }
     }
     return true;
   }
-  function v(H, f, T, N, e) {
-    for (var K = N; K < e; ++K) {
-      if (H.data[K * f * 4 + T * 4 + 3] !== 0) {
+  function isColEmpty(imageData, width, col, rowStart, rowEnd) {
+    for (var row = rowStart; row < rowEnd; ++row) {
+      if (imageData.data[row * width * 4 + col * 4 + 3] !== 0) {
         return false;
       }
     }
     return true;
   }
-  var l = Z.canvas;
-  var g = l.width;
-  var x = Z.getImageData(0, 0, l.width, l.height);
-  var s = 0;
-  var u = x.height;
-  var J = 0;
-  var G = x.width;
-  while (s < u && h(x, g, s)) {
-    ++s;
+  var canvas = ctx.canvas;
+  var width = canvas.width;
+  var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  var top = 0;
+  var bottom = imageData.height;
+  var left = 0;
+  var right = imageData.width;
+  while (top < bottom && isRowEmpty(imageData, width, top)) {
+    ++top;
   }
-  while (u - 1 > s && h(x, g, u - 1)) {
-    --u;
+  while (bottom - 1 > top && isRowEmpty(imageData, width, bottom - 1)) {
+    --bottom;
   }
-  while (J < G && v(x, g, J, s, u)) {
-    ++J;
+  while (left < right && isColEmpty(imageData, width, left, top, bottom)) {
+    ++left;
   }
-  while (G - 1 > J && v(x, g, G - 1, s, u)) {
-    --G;
+  while (right - 1 > left && isColEmpty(imageData, width, right - 1, top, bottom)) {
+    --right;
   }
   return {
-    x: J,
-    y: s,
-    w: G - J,
-    h: u - s
+    x: left,
+    y: top,
+    w: right - left,
+    h: bottom - top
   };
 };
-CV.new = function (Z, v) {
-  var l = document.createElement("canvas");
-  l.width = Z;
-  l.height = v;
-  return l;
+CV.new = function (width, height) {
+  var canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  return canvas;
 };
 var App = {
   progress: {
@@ -488,136 +488,136 @@ App.helpSeen = false;
 App.eeMoving = null;
 App.eeMovingRestore = null;
 App.userMaskActive = false;
-function updateBrush(Z) {
-  var h = 5;
-  Z = min(max(Z, h), 128);
-  gBrush.sz = Z;
-  const w = CV.new(Z, Z);
-  const v = w.getContext("2d");
-  v.lineWidth = h;
-  v.strokeStyle = $.isActive("mask_draw") ? "#000" : gBrush.color;
-  v.arc(Z / 2, Z / 2, (Z - h) / 2, 0, Math.PI * 2);
-  v.stroke();
-  w.toBlob(function (l) {
+function updateBrush(size) {
+  var minSize = 5;
+  size = min(max(size, minSize), 128);
+  gBrush.sz = size;
+  const canvas = CV.new(size, size);
+  const ctx = canvas.getContext("2d");
+  ctx.lineWidth = minSize;
+  ctx.strokeStyle = $.isActive("mask_draw") ? "#000" : gBrush.color;
+  ctx.arc(size / 2, size / 2, (size - minSize) / 2, 0, Math.PI * 2);
+  ctx.stroke();
+  canvas.toBlob(function (blob) {
     if (gBrush.url) {
       URL.revokeObjectURL(gBrush.url);
     }
-    gBrush.url = URL.createObjectURL(l);
-    SKETCH.style.cursor = "url(" + gBrush.url + ") " + Z / 2 + " " + Z / 2 + ", auto";
+    gBrush.url = URL.createObjectURL(blob);
+    SKETCH.style.cursor = "url(" + gBrush.url + ") " + size / 2 + " " + size / 2 + ", auto";
   });
 }
-App.mousemove = Z => {
-  var h = gMouseNow.x;
-  var w = gMouseNow.y;
+App.mousemove = evt => {
+  var mouseX = gMouseNow.x;
+  var mouseY = gMouseNow.y;
   if (App.eeMoving) {
-    var v = $.isActive("grid_mode") ? GRIDSZ : 1;
-    h = floor(h / v) * v;
-    w = floor(w / v) * v;
-    App.eeMoving.style.left = h + "px";
-    App.eeMoving.style.top = w + "px";
+    var snapStep = $.isActive("grid_mode") ? GRIDSZ : 1;
+    mouseX = floor(mouseX / snapStep) * snapStep;
+    mouseY = floor(mouseY / snapStep) * snapStep;
+    App.eeMoving.style.left = mouseX + "px";
+    App.eeMoving.style.top = mouseY + "px";
     return;
   }
-  var l = $.isActive("mask_draw");
-  var g = $.isActive("brush_draw");
-  if (g && Z.ctrlKey) {
-    var x = CV.mainC.getImageData(h, w, 1, 1).data;
-    if (x[3] > 0) {
-      x = "rgb(" + x[0] + "," + x[1] + "," + x[2] + ")";
-      gBrush.color = x;
+  var isMaskDraw = $.isActive("mask_draw");
+  var isBrushDraw = $.isActive("brush_draw");
+  if (isBrushDraw && evt.ctrlKey) {
+    var pixel = CV.mainC.getImageData(mouseX, mouseY, 1, 1).data;
+    if (pixel[3] > 0) {
+      pixel = "rgb(" + pixel[0] + "," + pixel[1] + "," + pixel[2] + ")";
+      gBrush.color = pixel;
       updateBrush(gBrush.sz);
     }
     return;
   }
-  if (l || g) {
+  if (isMaskDraw || isBrushDraw) {
     if (gButton < 0) {
       return;
     } else {
-      var s = l ? CV.maskC : CV.mainC;
-      s.lineWidth = gBrush.sz;
-      s.lineJoin = s.lineCap = "round";
-      s.strokeStyle = l ? "#fff" : gBrush.color;
+      var ctx = isMaskDraw ? CV.maskC : CV.mainC;
+      ctx.lineWidth = gBrush.sz;
+      ctx.lineJoin = ctx.lineCap = "round";
+      ctx.strokeStyle = isMaskDraw ? "#fff" : gBrush.color;
       if (gButton == 2) {
-        s.globalCompositeOperation = "destination-out";
+        ctx.globalCompositeOperation = "destination-out";
       }
-      s.beginPath();
-      s.moveTo(gMouseLast.x, gMouseLast.y);
-      s.lineTo(h, w);
-      s.stroke();
-      s.globalCompositeOperation = "source-over";
-      if (g && gButton == 0) {
-        s = CV.maskC;
-        s.lineWidth = gBrush.sz + 4;
-        s.lineJoin = s.lineCap = "round";
-        s.strokeStyle = "#fff";
-        s.beginPath();
-        s.moveTo(gMouseLast.x, gMouseLast.y);
-        s.lineTo(h, w);
-        s.stroke();
+      ctx.beginPath();
+      ctx.moveTo(gMouseLast.x, gMouseLast.y);
+      ctx.lineTo(mouseX, mouseY);
+      ctx.stroke();
+      ctx.globalCompositeOperation = "source-over";
+      if (isBrushDraw && gButton == 0) {
+        ctx = CV.maskC;
+        ctx.lineWidth = gBrush.sz + 4;
+        ctx.lineJoin = ctx.lineCap = "round";
+        ctx.strokeStyle = "#fff";
+        ctx.beginPath();
+        ctx.moveTo(gMouseLast.x, gMouseLast.y);
+        ctx.lineTo(mouseX, mouseY);
+        ctx.stroke();
       }
-      gMouseLast.x = h;
-      gMouseLast.y = w;
+      gMouseLast.x = mouseX;
+      gMouseLast.y = mouseY;
     }
     return;
   }
   if (gButton < 0) {
-    updateBOX(h, w, h, w);
+    updateBOX(mouseX, mouseY, mouseX, mouseY);
   } else {
-    updateBOX(gMouseLast.x, gMouseLast.y, h, w);
+    updateBOX(gMouseLast.x, gMouseLast.y, mouseX, mouseY);
   }
 };
-function setBtn(Z, h, w = true) {
-  if (h) {
-    $c("button[data-id=" + Z + "]").add("active");
+function setBtn(btnId, active, withSideEffects = true) {
+  if (active) {
+    $c("button[data-id=" + btnId + "]").add("active");
   } else {
-    $c("button[data-id=" + Z + "]").remove("active");
+    $c("button[data-id=" + btnId + "]").remove("active");
   }
-  if (Z == "help_show") {
-    if (h) {
+  if (btnId == "help_show") {
+    if (active) {
       App.helpSeen = true;
     }
-    $.setShow("#help", h);
-  } else if (Z == "prompt_show") {
+    $.setShow("#help", active);
+  } else if (btnId == "prompt_show") {
     onJSONblur({
       target: $("#prompt")
     });
-    $.setShow("#prompt_wrap", h);
+    $.setShow("#prompt_wrap", active);
     setTimeout(function () {
       $("#prompt").focus();
     }, 0);
-  } else if (Z == "config_show") {
-    $.setShow("#config_wrap", h);
+  } else if (btnId == "config_show") {
+    $.setShow("#config_wrap", active);
     setTimeout(function () {
       $("#config").focus();
     }, 0);
-  } else if (Z == "palette_show") {
-    $.setShow("#palette", h);
-    if (w) {
-      if (h) {
+  } else if (btnId == "palette_show") {
+    $.setShow("#palette", active);
+    if (withSideEffects) {
+      if (active) {
         if (!$.isActive("brush_draw")) {
           setBtn("brush_draw", true);
         }
       }
     }
-  } else if (Z == "mask_show") {
-    $.setShow(CV.mask, h);
-    if (w) {
-      App.userMaskActive = h;
-      if (!h) {
+  } else if (btnId == "mask_show") {
+    $.setShow(CV.mask, active);
+    if (withSideEffects) {
+      App.userMaskActive = active;
+      if (!active) {
         if ($.isActive("mask_draw")) {
           setBtn("mask_draw", false);
         }
       }
     }
-  } else if (Z == "mask_draw") {
-    if (h) {
+  } else if (btnId == "mask_draw") {
+    if (active) {
       setBtn("brush_draw", false);
       updateBrush(gBrush.sz);
       setBtn("mask_show", true);
     } else {
       SKETCH.style.cursor = "crosshair";
     }
-  } else if (Z == "brush_draw") {
-    if (h) {
+  } else if (btnId == "brush_draw") {
+    if (active) {
       setBtn("mask_show", false);
       setBtn("mask_draw", false);
       setBtn("palette_show", true);
@@ -626,34 +626,34 @@ function setBtn(Z, h, w = true) {
       setBtn("palette_show", false);
       SKETCH.style.cursor = "crosshair";
     }
-  } else if (Z == "error_close") {
+  } else if (btnId == "error_close") {
     $.error("");
-  } else if (Z == "grid_mode") {
+  } else if (btnId == "grid_mode") {
     if (gMouseNow.x != -1 && gMouseNow.y != -1) {
       App.mousemove({});
     }
   }
 }
-function toggleBtn(Z) {
-  setBtn(Z, !$.isActive(Z));
+function toggleBtn(btnId) {
+  setBtn(btnId, !$.isActive(btnId));
 }
-App.setObj = function (Z, h) {
-  localStorage.setItem("HUA_V1_" + Z, JSON.stringify(h));
+App.setObj = function (key, value) {
+  localStorage.setItem("HUA_V1_" + key, JSON.stringify(value));
 };
-App.getObj = function (Z) {
+App.getObj = function (key) {
   try {
-    var h = JSON.parse(localStorage.getItem("HUA_V1_" + Z));
-    if (h) {
-      return h;
+    var value = JSON.parse(localStorage.getItem("HUA_V1_" + key));
+    if (value) {
+      return value;
     } else {
       return {};
     }
-  } catch (w) {
+  } catch (err) {
     return {};
   }
 };
 App.readStatus = function () {
-  var Z = Object.assign({
+  var prompt = Object.assign({
     prompt: "a color photo of cityscape, street, building, trees, sky",
     negative_prompt: "ugly, bad quality, error, blurry, blurred",
     seed: -1,
@@ -686,16 +686,16 @@ App.readStatus = function () {
     CFG.canvas_h = 0;
   }
   CFG.seam_fix_radius = min(32, max(0, CFG.seam_fix_radius));
-  App.setObj("PROMPT", Z);
+  App.setObj("PROMPT", prompt);
   App.setObj("CONFIG", CFG);
-  $("#prompt").value = stringify(Z);
+  $("#prompt").value = stringify(prompt);
   $("#config").value = stringify(CFG);
 };
 App.readStatus();
 $("#prompt").setSelectionRange(13, 13);
-App.clearDefault = function (Z) {
-  Z.preventDefault();
-  Z.stopPropagation();
+App.clearDefault = function (evt) {
+  evt.preventDefault();
+  evt.stopPropagation();
   $.error("");
 };
 App.reset = function () {
@@ -717,66 +717,66 @@ App.resetConfig = function () {
   setBtn("help_show", false);
 };
 App.getServer = function () {
-  var Z = "http://" + CFG.server;
+  var url = "http://" + CFG.server;
   if (CFG.server.startsWith("https://") || CFG.server.startsWith("http://")) {
-    Z = CFG.server;
+    url = CFG.server;
   }
-  Z = Z.trim();
-  if (Z.endsWith("/")) {
-    Z = Z.substring(0, Z.length - 1);
+  url = url.trim();
+  if (url.endsWith("/")) {
+    url = url.substring(0, url.length - 1);
   }
-  return Z;
+  return url;
 };
 App.sync = function () {
   try {
-    for (var Z in App.task) {
-      Z = parseInt(Z);
-      var h = App.task[Z];
-      if (h.status == -1 || h.status == 1) {
+    for (var taskId in App.task) {
+      taskId = parseInt(taskId);
+      var task = App.task[taskId];
+      if (task.status == -1 || task.status == 1) {
         throw new Error();
       }
     }
-    var w = -1;
-    var v = Date.now();
-    for (var Z in App.task) {
-      Z = parseInt(Z);
-      var h = App.task[Z];
-      if (h.status == 0 && h.timestamp < v) {
-        w = Z;
-        v = h.timestamp;
+    var earliest = -1;
+    var now = Date.now();
+    for (var taskId in App.task) {
+      taskId = parseInt(taskId);
+      var task = App.task[taskId];
+      if (task.status == 0 && task.timestamp < now) {
+        earliest = taskId;
+        now = task.timestamp;
       }
     }
-    if (w != -1) {
-      var h = App.task[w];
-      h.status = 1;
-      post(h.URL, h.prompt).then(F => h.funGood(F)).catch(F => h.funBad(F));
+    if (earliest != -1) {
+      var task = App.task[earliest];
+      task.status = 1;
+      post(task.URL, task.prompt).then(err => task.funGood(err)).catch(err => task.funBad(err));
     }
-  } catch (F) {}
-  var l = $.size(BOX);
-  var g = "";
-  var x = "";
+  } catch (err) {}
+  var boxPos = $.size(BOX);
+  var strHtml = "";
+  var promptHtml = "";
   if (gButton < 0) {
-    g = "L🖱️ generate, R🖱️ functions";
+    strHtml = "L🖱️ generate, R🖱️ functions";
   } else if (gButton == 0) {
-    var s = JSON.parse($("#prompt").value);
-    g = "L🖱️ run, R🖱️ cancel, <span class=\"box_input\">run<input type=\"number\" class=\"box_trial\" style=\"width:2.6em;height:2em;font-weight:bold\" value=\"1\">\n    , str<input type=\"number\" class=\"box_strength\" style=\"width:3.6em;height:2em;font-weight:bold\" value=\"" + s.denoising_strength + "\" step=\"0.05\"></span>";
+    var prompt = JSON.parse($("#prompt").value);
+    strHtml = "L🖱️ run, R🖱️ cancel, <span class=\"box_input\">run<input type=\"number\" class=\"box_trial\" style=\"width:2.6em;height:2em;font-weight:bold\" value=\"1\">\n    , str<input type=\"number\" class=\"box_strength\" style=\"width:3.6em;height:2em;font-weight:bold\" value=\"" + prompt.denoising_strength + "\" step=\"0.05\"></span>";
     try {
-      s.denoising_strength = parseFloat(BOX.querySelector(".box_strength").value);
-    } catch (P) {}
-    x = stringify(s).replace("{\n\"", "<span style=\"color:#aaa;\">").replace("\n}", "</span>").replaceAll("\": \"", "</span> <span style=\"color:#eee;\">").replaceAll("\": ", "</span> <span style=\"color:#eee;\">").replaceAll("\",\n\"", "</span>\n<span style=\"color:#aaa;\">").replaceAll(",\n\"", "</span>\n<span style=\"color:#aaa;\">").trim().replaceAll("\n", "<br>");
+      prompt.denoising_strength = parseFloat(BOX.querySelector(".box_strength").value);
+    } catch (err) {}
+    promptHtml = stringify(prompt).replace("{\n\"", "<span style=\"color:#aaa;\">").replace("\n}", "</span>").replaceAll("\": \"", "</span> <span style=\"color:#eee;\">").replaceAll("\": ", "</span> <span style=\"color:#eee;\">").replaceAll("\",\n\"", "</span>\n<span style=\"color:#aaa;\">").replaceAll(",\n\"", "</span>\n<span style=\"color:#aaa;\">").trim().replaceAll("\n", "<br>");
   } else {
-    g = "<select class=\"box_select\">\n    <option>🧹Erase</option><option>🍀Move</option><option>👯Clone</option>\n    <option>🌟Scale2x</option><option>🌟Scale3x</option><option>🌟Scale4x</option>\n    <option>🌑Mask</option><option>🌕Unmask</option>\n    </select> <span>L🖱️ confirm, R🖱️ cancel</span>";
+    strHtml = "<select class=\"box_select\">\n    <option>🧹Erase</option><option>🍀Move</option><option>👯Clone</option>\n    <option>🌟Scale2x</option><option>🌟Scale3x</option><option>🌟Scale4x</option>\n    <option>🌑Mask</option><option>🌕Unmask</option>\n    </select> <span>L🖱️ confirm, R🖱️ cancel</span>";
   }
-  g = $.parse(g);
-  var u = BOX.querySelector(".box_str");
-  if (g != u.innerHTML) {
-    u.innerHTML = g;
+  strHtml = $.parse(strHtml);
+  var strEl = BOX.querySelector(".box_str");
+  if (strHtml != strEl.innerHTML) {
+    strEl.innerHTML = strHtml;
   }
-  u = BOX.querySelector(".box_prompt");
-  if (x != u.innerHTML) {
-    u.innerHTML = x;
+  strEl = BOX.querySelector(".box_prompt");
+  if (promptHtml != strEl.innerHTML) {
+    strEl.innerHTML = promptHtml;
   }
-  BOX.querySelector(".box_remark").innerHTML = l.w + "x" + l.h;
+  BOX.querySelector(".box_remark").innerHTML = boxPos.w + "x" + boxPos.h;
   if ($.isActive("mask_draw") || $.isActive("brush_draw") || App.eeMoving) {
     BOX.style.display = "none";
   } else {
@@ -788,206 +788,206 @@ App.sync = function () {
     BOX.style.backgroundImage = "radial-gradient(circle at 100% 100%, transparent -1px, rgba(255,0,0,0.8) -1px, rgba(255,0,0,0.8) 1px, transparent 1px), linear-gradient(to right, rgba(255,0,0,0.8), rgba(231,69,0,0.8)), radial-gradient(circle at 0% 100%, transparent -1px, rgba(231,69,0,0.8) -1px, rgba(231,69,0,0.8) 1px, transparent 1px), linear-gradient(to bottom, rgba(231,69,0,0.8), rgba(255,0,0,0.8)), radial-gradient(circle at 0% 0%, transparent -1px, rgba(255,0,0,0.8) -1px, rgba(255,0,0,0.8) 1px, transparent 1px), linear-gradient(to left, rgba(255,0,0,0.8), rgba(231,69,0,0.8)), radial-gradient(circle at 100% 0%, transparent -1px, rgba(231,69,0,0.8) -1px, rgba(231,69,0,0.8) 1px, transparent 1px), linear-gradient(to top, rgba(231,69,0,0.8), rgba(255,0,0,0.8))";
   }
   try {
-    BOX.querySelector(".box_trial").onchange = function (y) {
-      var O = y.target;
-      O.value = min(99, max(1, parseInt(O.value)));
+    BOX.querySelector(".box_trial").onchange = function (inputEvt) {
+      var inputEl = inputEvt.target;
+      inputEl.value = min(99, max(1, parseInt(inputEl.value)));
     };
-    BOX.querySelector(".box_strength").onchange = function (y) {
-      var O = y.target;
-      O.value = round(min(1, max(0.05, parseFloat(O.value))) * 20) / 20;
+    BOX.querySelector(".box_strength").onchange = function (inputEvt) {
+      var inputEl = inputEvt.target;
+      inputEl.value = round(min(1, max(0.05, parseFloat(inputEl.value))) * 20) / 20;
     };
-  } catch (y) {}
+  } catch (err2) {}
   try {
-    BOX.querySelector(".box_select").onchange = function (O) {
-      var V = O.target;
-      V = V.options[V.selectedIndex].text.toLowerCase();
-      V = Array.from(V).slice(1).join("");
-      if (V == "mask" || V == "unmask") {
+    BOX.querySelector(".box_select").onchange = function (err2) {
+      var sel = err2.target;
+      sel = sel.options[sel.selectedIndex].text.toLowerCase();
+      sel = Array.from(sel).slice(1).join("");
+      if (sel == "mask" || sel == "unmask") {
         setBtn("mask_show", true, false);
       } else {
         setBtn("mask_show", App.userMaskActive, false);
       }
     };
-  } catch (O) {}
+  } catch (err3) {}
   try {
-    var J = document.querySelectorAll(".box_genstat").length;
-    if (J > 0) {
-      var G = Object.keys(App.task).sort((V, m) => Math.sign(App.task[V].timestamp - App.task[m].timestamp));
-      var H = 0;
-      for (var f = 0; f < G.length; f++) {
-        var Z = G[f];
-        var T = $(".drawBox[task=\"" + Z + "\"]");
-        var l = $.size(T);
-        var u = T.querySelector(".box_genstat");
-        if (u) {
-          var N = "?";
-          var K = "?";
-          var A = App.progress;
-          if (H == 0 && A.progress != 0) {
-            N = Math.abs(parseFloat(A.progress));
-            K = Math.round(Math.abs(parseFloat(A.eta_relative)));
-            if (N == 1) {
+    var genstatCount = document.querySelectorAll(".box_genstat").length;
+    if (genstatCount > 0) {
+      var taskIds = Object.keys(App.task).sort((taskId, taskIdB) => Math.sign(App.task[taskId].timestamp - App.task[taskIdB].timestamp));
+      var queueIndex = 0;
+      for (var idx = 0; idx < taskIds.length; idx++) {
+        var taskId = taskIds[idx];
+        var taskBox = $(".drawBox[task=\"" + taskId + "\"]");
+        var boxPos = $.size(taskBox);
+        var strEl = taskBox.querySelector(".box_genstat");
+        if (strEl) {
+          var progressPct = "?";
+          var etaSec = "?";
+          var prog = App.progress;
+          if (queueIndex == 0 && prog.progress != 0) {
+            progressPct = Math.abs(parseFloat(prog.progress));
+            etaSec = Math.round(Math.abs(parseFloat(prog.eta_relative)));
+            if (progressPct == 1) {
               App.progress = {
                 progress: 0
               };
             }
-            if (A.current_image) {
-              var q = A.current_image;
-              if (App.progImgBak != q) {
-                App.progImgBak = q;
-                if (!q.startsWith("data:")) {
-                  q = "data:image/png;base64," + q;
+            if (prog.current_image) {
+              var curImg = prog.current_image;
+              if (App.progImgBak != curImg) {
+                App.progImgBak = curImg;
+                if (!curImg.startsWith("data:")) {
+                  curImg = "data:image/png;base64," + curImg;
                 }
-                CV.loadDataURL(CV.mainC, q, l.x, l.y, l.w, l.h);
+                CV.loadDataURL(CV.mainC, curImg, boxPos.x, boxPos.y, boxPos.w, boxPos.h);
               }
             }
           }
-          u.innerHTML = "<span class=\"box_progress\" style=\"color:#0f0;\">" + (N == "?" ? "?" : Math.round(N * 100)) + "%</span> of " + App.task[Z].prompt.n_iter + " (" + K + "s) queue <span style=\"color:#0f0;\">" + (H + 1) + "</span> / " + J;
-          H += 1;
+          strEl.innerHTML = "<span class=\"box_progress\" style=\"color:#0f0;\">" + (progressPct == "?" ? "?" : Math.round(progressPct * 100)) + "%</span> of " + App.task[taskId].prompt.n_iter + " (" + etaSec + "s) queue <span style=\"color:#0f0;\">" + (queueIndex + 1) + "</span> / " + genstatCount;
+          queueIndex += 1;
         }
       }
     }
-  } catch (C) {
-    console.log(C);
+  } catch (err2) {
+    console.log(err2);
   }
 };
 App.syncA1111 = function () {
-  var Z = App.getServer();
+  var serverUrl = App.getServer();
   try {
-    gget(Z + "/sdapi/v1/options").then(h => {
-      App.optionNow = h;
+    gget(serverUrl + "/sdapi/v1/options").then(data => {
+      App.optionNow = data;
       App.modelTarget = App.optionNow.sd_model_checkpoint;
       try {
-        $("#prompt_model").selectedIndex = App.sd_models.findIndex(function (v) {
-          return v.title == App.optionNow.sd_model_checkpoint;
+        $("#prompt_model").selectedIndex = App.sd_models.findIndex(function (item) {
+          return item.title == App.optionNow.sd_model_checkpoint;
         });
-      } catch (l) {}
-    }).catch(h => {});
-    gget(Z + "/sdapi/v1/samplers").then(h => {
-      if (JSON.stringify(App.samplers) != JSON.stringify(h)) {
-        App.samplers = h;
-        var w = "";
-        for (var v of h) {
-          w += "<option>" + v.name + "</option>";
+      } catch (modelIdx) {}
+    }).catch(data => {});
+    gget(serverUrl + "/sdapi/v1/samplers").then(data => {
+      if (JSON.stringify(App.samplers) != JSON.stringify(data)) {
+        App.samplers = data;
+        var optionsHtml = "";
+        for (var item of data) {
+          optionsHtml += "<option>" + item.name + "</option>";
         }
-        $("#prompt_sampler").innerHTML = w;
+        $("#prompt_sampler").innerHTML = optionsHtml;
         onJSONblur({
           target: $("#prompt")
         });
       }
-    }).catch(h => {});
-    gget(Z + "/sdapi/v1/sd-models").then(h => {
-      if (JSON.stringify(App.sd_models) != JSON.stringify(h)) {
-        App.sd_models = h;
-        var w = "";
-        for (var v of h) {
-          w += "<option>" + v.title + "</option>";
+    }).catch(data => {});
+    gget(serverUrl + "/sdapi/v1/sd-models").then(data => {
+      if (JSON.stringify(App.sd_models) != JSON.stringify(data)) {
+        App.sd_models = data;
+        var optionsHtml = "";
+        for (var item of data) {
+          optionsHtml += "<option>" + item.title + "</option>";
         }
-        $("#prompt_model").innerHTML = w;
+        $("#prompt_model").innerHTML = optionsHtml;
         try {
-          $("#prompt_model").selectedIndex = App.sd_models.findIndex(function (g) {
-            return g.title == App.optionNow.sd_model_checkpoint;
+          $("#prompt_model").selectedIndex = App.sd_models.findIndex(function (modelIdx) {
+            return modelIdx.title == App.optionNow.sd_model_checkpoint;
           });
-        } catch (g) {}
+        } catch (modelIdx) {}
       }
-    }).catch(h => {});
-  } catch (h) {}
+    }).catch(data => {});
+  } catch (data) {}
 };
 App.syncProgress = function () {
-  var Z = App.getServer();
-  var h = true;
-  for (l in App.task) {
-    if (App.task[l].status == 1) {
-      h = false;
+  var serverUrl = App.getServer();
+  var allIdle = true;
+  for (taskIdA in App.task) {
+    if (App.task[taskIdA].status == 1) {
+      allIdle = false;
     }
   }
-  if (h) {
+  if (allIdle) {
     return;
   }
-  var w = true;
+  var skipImg = true;
   try {
-    var v = Object.keys(App.task).sort((g, x) => Math.sign(App.task[g].timestamp - App.task[x].timestamp));
-    var l = App.task[v[0]];
-    if (l.prompt.width == 512 && l.prompt.height == 512) {
-      w = false;
+    var taskIds = Object.keys(App.task).sort((taskIdA, taskIdB) => Math.sign(App.task[taskIdA].timestamp - App.task[taskIdB].timestamp));
+    var task = App.task[taskIds[0]];
+    if (task.prompt.width == 512 && task.prompt.height == 512) {
+      skipImg = false;
     }
-  } catch (x) {}
+  } catch (safeCheck) {}
   try {
-    let s = App.progSafeCheck;
-    gget(Z + ("/sdapi/v1/progress?skip_current_image=" + w)).then(u => {
-      if (s == App.progSafeCheck) {
-        App.progress = u;
+    let safeCheck = App.progSafeCheck;
+    gget(serverUrl + ("/sdapi/v1/progress?skip_current_image=" + skipImg)).then(data => {
+      if (safeCheck == App.progSafeCheck) {
+        App.progress = data;
       } else {}
-    }).catch(u => {});
-  } catch (u) {}
+    }).catch(data => {});
+  } catch (data) {}
 };
 App.syncPrompt = function () {
-  var Z = JSON.parse($("#prompt").value);
-  var h = null;
-  h = $("#prompt_sampler");
-  Z.sampler_index = h.options[h.selectedIndex].text;
-  h = $("#prompt_fill");
-  Z.inpainting_fill = h.selectedIndex;
-  $("#prompt").value = stringify(Z);
+  var prompt = JSON.parse($("#prompt").value);
+  var el = null;
+  el = $("#prompt_sampler");
+  prompt.sampler_index = el.options[el.selectedIndex].text;
+  el = $("#prompt_fill");
+  prompt.inpainting_fill = el.selectedIndex;
+  $("#prompt").value = stringify(prompt);
   onJSONblur({
     target: $("#prompt")
   });
 };
 App.syncModel = () => {
   try {
-    var Z = App.getServer();
-    var h = $("#prompt_model");
-    if (App.modelTarget != h.options[h.selectedIndex].text) {
-      App.modelTarget = h.options[h.selectedIndex].text;
-      let w = App.modelTarget;
-      post(Z + "/sdapi/v1/options", {
-        sd_model_checkpoint: w
-      }).then(v => {
-        if (w == App.modelTarget) {
+    var serverUrl = App.getServer();
+    var modelEl = $("#prompt_model");
+    if (App.modelTarget != modelEl.options[modelEl.selectedIndex].text) {
+      App.modelTarget = modelEl.options[modelEl.selectedIndex].text;
+      let modelName = App.modelTarget;
+      post(serverUrl + "/sdapi/v1/options", {
+        sd_model_checkpoint: modelName
+      }).then(res => {
+        if (modelName == App.modelTarget) {
           $.top_right("");
         }
-      }).catch(v => {
-        if (w == App.modelTarget) {
+      }).catch(res => {
+        if (modelName == App.modelTarget) {
           $.top_right("");
         }
         $.error("Cannot switch model.");
       });
-      $.top_right("Switching to " + w + "...");
+      $.top_right("Switching to " + modelName + "...");
     }
-  } catch (l) {}
+  } catch (modelIdx) {}
 };
 $("#help").innerHTML = $.parse("\nPaintHua.com is 100% free. It can connect to your local A1111 via its API.\n<ul>\n<li>Update A1111 to LATEST version with git pull. Chrome browser recommended (Brave shield will block A1111 because it's HTTP).</li>\n<li><span style=\"color:gold\">set COMMANDLINE_ARGS=--api --cors-allow-origins=https://www.painthua.com</span> in webui-user.bat.</li>\n<li>A1111 settings: use <a href=\"https://huggingface.co/runwayml/stable-diffusion-inpainting\" target=\"_blank\">sd-v1.5-inpainting</a> model, turn off \"Apply color correction to img2img results\", and set \"Inpainting conditioning mask strength\" to 1.</li>\n<li>Add --listen if you need LAN access. When connecting to IP other than 127.0.0.1, google \"enable mixed content\" and change site settings (because A1111 is HTTP instead of HTTPS).</li>\n<li>PaintHua can connect to colab. <a href=\"https://github.com/BlinkDL/Hua\" targe=\"_blank\">Click for guide.</a></li>\n</ul>\n<br>Tips:&nbsp; <a href=\"https://discord.gg/y9kMYtjgFZ\" target=\"_blank\">Discord (help you 🙋)</a>\n&nbsp;<a href=\"https://www.youtube.com/watch?v=OAoQLFzPABY\" target=\"_blank\">Youtube Guide</a>\n&nbsp;<a href=\"https://www.bilibili.com/video/BV16e4y1a7ne\" target=\"_blank\">B站教程</a>\n&nbsp;<a href=\"https://www.bilibili.com/video/BV15R4y1f7sh\" target=\"_blank\">整合包1</a>\n&nbsp;<a href=\"https://www.bilibili.com/video/BV1dP411g7YN\" target=\"_blank\">整合包2</a>\n&nbsp;<a href=\"https://gigazine.net/news/20221113-hua-stable-diffusion-outpainting/\" target=\"_blank\">使い方</a>\n&nbsp;<a href=\"https://github.com/BlinkDL/Hua\" target=\"_blank\">Github</a>\n<ul><li><span style=\"color:gold\">Set canvas size in Config (0 means window size, 4096 max). Close config and refresh page to apply.</span></li>\n<li>Space: prompt. Tab: toggle mask. ESC: close info banner or textbox. G: toggle grid mode.</li>\n<li>Prompt \"inpainting_fill\": 0=fill, 1=original, 2=latentNoise, 3=latentNothing. <span style=\"color:gold\">Some can reduce seams.</span></li>\n</ul>\n<br>Normal mode (for txt2img / inpainting / outpainting)\n<ul><li>L🖱️ generate. Move 🖱️ (don't hold L🖱️) to adjust size, 🖱️wheel for #trials, L🖱️ again to confirm.</li>\n<li>🖱️wheel to browse results (move 🖱️ to bottom of box to hide buttons). 🖱️wheel on [+1] for [+more].</li>\n<li>R🖱️ functions. 🖱️wheel to switch function. Ctrl+C/S is restricted to the box.</li></ul>\n<br>Mask mode (hotkey: Shift) (🖱️wheel for brush size)\n<ul><li>L🖱️ draw mask for inpainting. For doing inpainting, switch to normal mode and draw a large box covering both masked regions and relevant image context.</li>\n<li>R🖱️ erase mask. The mask is also automatically erased when you accept a box.</li></ul>\n<br>Brush mode (hotkey: `) (🖱️wheel for brush size)\n<ul><li>L🖱️ paint, R🖱️ erase. All affected regions are automatically masked. Try drawing some colors and inpaint on top of them.</li>\n<li>Ctrl+L🖱️ (or Ctrl+move 🖱️) pick color from canvas.</li></ul>\n<br>i2i (img2img) mode: This will ignore mask. Good for improving upscaled images and brush sketches.\n<br><br>Troubleshoot: <a href=\"#\" style=\"margin:0 1em\" onclick=\"App.resetPrompt()\">reset prompt</a> <a href=\"#\" onclick=\"App.resetConfig()\">reset config</a>\n");
 var gPalette = "000000 222034 45283c 663931 8f563b df7126 d9a066 eec39a fbf236 99e550 6abe30 37946e 4b692f 8f974a 8a6f30 524b24 323c39 3f3f74 306082 5b6ee1 639bff 5fcde4 cbdbfc ffffff 9badb7 847e87 696a6a 595652 76428a d77bba d95763 ac3232".split(" ");
-var tmp = "";
-for (var i of gPalette) {
-  tmp += "<span style=\"background:#" + i + ";\" class=\"unselectable\"></span>";
+var paletteHtml = "";
+for (var colorHex of gPalette) {
+  paletteHtml += "<span style=\"background:#" + colorHex + ";\" class=\"unselectable\"></span>";
 }
-$("#palette").innerHTML = tmp;
+$("#palette").innerHTML = paletteHtml;
 var gBrush = {
   sz: 64,
   url: null,
   color: "#eec39a"
 };
-function onJSONblur(Z) {
-  var h = Z.target;
-  var w = h.id.toUpperCase();
+function onJSONblur(evt) {
+  var input = evt.target;
+  var key = input.id.toUpperCase();
   try {
-    var v = JSON.parse(h.value);
-    h.value = stringify(v);
-    App.setObj(w, v);
+    var obj = JSON.parse(input.value);
+    input.value = stringify(obj);
+    App.setObj(key, obj);
     App.readStatus();
     $.error("");
-  } catch (x) {
-    $.error(w + " is not a valid JSON. Please check its format.");
+  } catch (parseErr) {
+    $.error(key + " is not a valid JSON. Please check its format.");
   }
-  if (w == "PROMPT") {
+  if (key == "PROMPT") {
     try {
-      var l = JSON.parse($("#prompt").value);
-      $("#prompt_sampler").selectedIndex = App.samplers.findIndex(function (u) {
-        return u.name.toLowerCase() == l.sampler_index.toLowerCase();
+      var prompt = JSON.parse($("#prompt").value);
+      $("#prompt_sampler").selectedIndex = App.samplers.findIndex(function (err) {
+        return err.name.toLowerCase() == prompt.sampler_index.toLowerCase();
       });
-      $("#prompt_fill").selectedIndex = parseInt(l.inpainting_fill);
-    } catch (u) {}
+      $("#prompt_fill").selectedIndex = parseInt(prompt.inpainting_fill);
+    } catch (err) {}
   }
 }
 $("#prompt").addEventListener("blur", onJSONblur);
@@ -1038,624 +1038,624 @@ setInterval(function () {
   App.syncProgress();
 }, 1000);
 App.syncA1111();
-CV.draw = function (Z, v, l, g) {
-  let s = {};
+CV.draw = function (boxX, boxY, boxW, boxH) {
+  let settings = {};
   try {
-    s = JSON.parse($("#prompt").value);
+    settings = JSON.parse($("#prompt").value);
     $.error("");
-  } catch (V) {
+  } catch (err3) {
     $.error("Prompt invalid. Please check its format.");
     return;
   }
-  var u = CV.new(l, g);
-  var J = u.getContext("2d", {
+  var tmpCanvas = CV.new(boxW, boxH);
+  var tmpCtx = tmpCanvas.getContext("2d", {
     willReadFrequently: true
   });
-  J.drawImage(CV.main, Z, v, l, g, 0, 0, l, g);
-  var G = u.toDataURL();
-  J.fillStyle = "#fff";
-  J.fillRect(0, 0, l, g);
-  var H = true;
-  var f = new Uint32Array(CV.mainC.getImageData(Z, v, l, g).data.buffer);
-  var T = J.getImageData(0, 0, l, g);
-  var N = new Uint32Array(T.data.buffer);
-  var K = CFG.seam_fix_radius;
-  for (var A = 0; A < f.length; A++) {
-    if (f[A] >> 24 == -1) {
-      H = false;
-      N[A] = 4278190080;
-      if (K > 0) {
-        var q = A % l;
-        for (var R = 1; R <= K; R++) {
-          if (q - R >= 0 && f[A - R] >> 24 != -1) {
+  tmpCtx.drawImage(CV.main, boxX, boxY, boxW, boxH, 0, 0, boxW, boxH);
+  var origImg = tmpCanvas.toDataURL();
+  tmpCtx.fillStyle = "#fff";
+  tmpCtx.fillRect(0, 0, boxW, boxH);
+  var isBlank = true;
+  var mainPixels = new Uint32Array(CV.mainC.getImageData(boxX, boxY, boxW, boxH).data.buffer);
+  var maskImgData = tmpCtx.getImageData(0, 0, boxW, boxH);
+  var maskPixels = new Uint32Array(maskImgData.data.buffer);
+  var seamRadius = CFG.seam_fix_radius;
+  for (var pixIdx = 0; pixIdx < mainPixels.length; pixIdx++) {
+    if (mainPixels[pixIdx] >> 24 == -1) {
+      isBlank = false;
+      maskPixels[pixIdx] = 4278190080;
+      if (seamRadius > 0) {
+        var pixCol = pixIdx % boxW;
+        for (var r = 1; r <= seamRadius; r++) {
+          if (pixCol - r >= 0 && mainPixels[pixIdx - r] >> 24 != -1) {
             break;
           }
-          if (q + R < l && f[A + R] >> 24 != -1) {
+          if (pixCol + r < boxW && mainPixels[pixIdx + r] >> 24 != -1) {
             break;
           }
-          if (A - l * R >= 0 && f[A - l * R] >> 24 != -1) {
+          if (pixIdx - boxW * r >= 0 && mainPixels[pixIdx - boxW * r] >> 24 != -1) {
             break;
           }
-          if (A + l * R < f.length && f[A + l * R] >> 24 != -1) {
+          if (pixIdx + boxW * r < mainPixels.length && mainPixels[pixIdx + boxW * r] >> 24 != -1) {
             break;
           }
-          if (R == K) {
-            R = K + 1;
+          if (r == seamRadius) {
+            r = seamRadius + 1;
             break;
           }
         }
-        R = K + 1 - R;
-        if (R > 0) {
-          N[A] = 4278190080 + floor(R * 255 / (K + 1)) * 65793;
+        r = seamRadius + 1 - r;
+        if (r > 0) {
+          maskPixels[pixIdx] = 4278190080 + floor(r * 255 / (seamRadius + 1)) * 65793;
         }
       }
     }
   }
-  J.putImageData(T, 0, 0);
-  if (K > 0) {
-    J.globalCompositeOperation = "lighten";
-    J.drawImage(u, -K, 0);
-    J.drawImage(u, K, 0);
-    J.drawImage(u, 0, -K);
-    J.drawImage(u, 0, K);
-    J.globalCompositeOperation = "source-over";
+  tmpCtx.putImageData(maskImgData, 0, 0);
+  if (seamRadius > 0) {
+    tmpCtx.globalCompositeOperation = "lighten";
+    tmpCtx.drawImage(tmpCanvas, -seamRadius, 0);
+    tmpCtx.drawImage(tmpCanvas, seamRadius, 0);
+    tmpCtx.drawImage(tmpCanvas, 0, -seamRadius);
+    tmpCtx.drawImage(tmpCanvas, 0, seamRadius);
+    tmpCtx.globalCompositeOperation = "source-over";
   }
   App.sync();
-  s = Object.assign(s, {
-    width: l,
-    height: g,
+  settings = Object.assign(settings, {
+    width: boxW,
+    height: boxH,
     n_iter: parseInt(BOX.querySelector(".box_trial").value),
     denoising_strength: parseFloat(BOX.querySelector(".box_strength").value),
     include_init_images: false
   });
-  if (H && !$.isActive("i2i_mode")) {
-    CV.noise(J, l, g);
-    CV.mainC.drawImage(u, Z, v);
-    s = Object.assign(s, {
+  if (isBlank && !$.isActive("i2i_mode")) {
+    CV.noise(tmpCtx, boxW, boxH);
+    CV.mainC.drawImage(tmpCanvas, boxX, boxY);
+    settings = Object.assign(settings, {
       denoising_strength: 1
     });
-    mylog("#draw/txt2img/" + l + "/" + g);
+    mylog("#draw/txt2img/" + boxW + "/" + boxH);
   } else {
-    J.drawImage(CV.mask, Z, v, l, g, 0, 0, l, g);
-    var n = u.toDataURL();
-    CV.noise(J, l, g);
-    J.drawImage(CV.main, Z, v, l, g, 0, 0, l, g);
-    var F = u.toDataURL();
+    tmpCtx.drawImage(CV.mask, boxX, boxY, boxW, boxH, 0, 0, boxW, boxH);
+    var maskDataUrl = tmpCanvas.toDataURL();
+    CV.noise(tmpCtx, boxW, boxH);
+    tmpCtx.drawImage(CV.main, boxX, boxY, boxW, boxH, 0, 0, boxW, boxH);
+    var initImgDataUrl = tmpCanvas.toDataURL();
     if (!$.isActive("i2i_mode")) {
-      console.img(n);
+      console.img(maskDataUrl);
     }
-    console.img(F);
-    CV.mainC.drawImage(u, Z, v);
-    s = Object.assign(s, {
-      mask: n,
-      init_images: [F]
+    console.img(initImgDataUrl);
+    CV.mainC.drawImage(tmpCanvas, boxX, boxY);
+    settings = Object.assign(settings, {
+      mask: maskDataUrl,
+      init_images: [initImgDataUrl]
     });
     if ($.isActive("i2i_mode")) {
-      delete s.mask;
+      delete settings.mask;
     }
-    mylog("#draw/img2img/" + l + "/" + g);
+    mylog("#draw/img2img/" + boxW + "/" + boxH);
   }
   try {
-    var P = BOX.cloneNode(true);
-    $.hide(P.querySelector(".box_prompt"));
-    P.classList.add("border_dance");
-    var M = 0;
+    var cloneBox = BOX.cloneNode(true);
+    $.hide(cloneBox.querySelector(".box_prompt"));
+    cloneBox.classList.add("border_dance");
+    var taskId = 0;
     try {
-      var k = Array.from(Object.keys(App.task)).map(Number);
-      if (k.length > 0) {
-        M = max(...k) + 1;
+      var taskKeys = Array.from(Object.keys(App.task)).map(Number);
+      if (taskKeys.length > 0) {
+        taskId = max(...taskKeys) + 1;
       }
-    } catch (r) {}
-    App.task[M] = {
+    } catch (err) {}
+    App.task[taskId] = {
       status: -1,
       timestamp: 1e+99,
-      prompt: s,
-      orig_img: G
+      prompt: settings,
+      orig_img: origImg
     };
-    P.setAttribute("task", M);
-    SKETCH.appendChild(P);
-    CV.sendPrompt(s, P);
-  } catch (L) {
-    console.log(L);
-    var O = L.toString();
-    mylog("#draw/err/" + O.substr(0, 100));
+    cloneBox.setAttribute("task", taskId);
+    SKETCH.appendChild(cloneBox);
+    CV.sendPrompt(settings, cloneBox);
+  } catch (err2) {
+    console.log(err2);
+    var errMsg = err2.toString();
+    mylog("#draw/err/" + errMsg.substr(0, 100));
   }
 };
-CV.sendPrompt = function (Z, h) {
-  h.querySelector(".box_str").innerHTML = "Generating... <span class=\"box_genstat\"></span><br>" + stringify(Z.prompt).replaceAll("\n", "<br> ").replaceAll("\"", "") + "<div class=\"box_inputX\" style=\"display:flex;align-items:center;width:min-content;\">\n    <button type=\"button\" data-id=\"box_cancel\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%\">❌</span></button>\n    </div>";
-  h.querySelector(".box_inputX").addEventListener("mouseenter", function (s) {
+CV.sendPrompt = function (prompt, boxEl) {
+  boxEl.querySelector(".box_str").innerHTML = "Generating... <span class=\"box_genstat\"></span><br>" + stringify(prompt.prompt).replaceAll("\n", "<br> ").replaceAll("\"", "") + "<div class=\"box_inputX\" style=\"display:flex;align-items:center;width:min-content;\">\n    <button type=\"button\" data-id=\"box_cancel\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%\">❌</span></button>\n    </div>";
+  boxEl.querySelector(".box_inputX").addEventListener("mouseenter", function (resultData) {
     $.hide(BOX);
   });
-  h.querySelector(".box_inputX").addEventListener("mouseleave", function (s) {
+  boxEl.querySelector(".box_inputX").addEventListener("mouseleave", function (resultData) {
     $.show(BOX);
   });
-  let w = $.size(h);
-  let v = parseInt(h.getAttribute("task"));
-  let l = App.task[v];
-  var g = App.getServer();
-  if ("init_images" in Z) {
-    g = g + "/sdapi/v1/img2img";
+  let url = $.size(boxEl);
+  let taskId = parseInt(boxEl.getAttribute("task"));
+  let task = App.task[taskId];
+  var serverUrl = App.getServer();
+  if ("init_images" in prompt) {
+    serverUrl = serverUrl + "/sdapi/v1/img2img";
   } else {
-    g = g + "/sdapi/v1/txt2img";
+    serverUrl = serverUrl + "/sdapi/v1/txt2img";
   }
-  l.URL = g;
-  function x() {
-    CV.mainC.clearRect(w.x, w.y, w.w, w.h);
-    CV.loadDataURL(CV.mainC, l.orig_img, w.x, w.y, w.w, w.h);
-    h.remove();
-    h = null;
+  task.URL = serverUrl;
+  function cancelFn() {
+    CV.mainC.clearRect(url.x, url.y, url.w, url.h);
+    CV.loadDataURL(CV.mainC, task.orig_img, url.x, url.y, url.w, url.h);
+    boxEl.remove();
+    boxEl = null;
   }
-  l.funGood = s => {
-    l.status = 2;
-    l.timestamp = 1e+99;
+  task.funGood = resultData => {
+    task.status = 2;
+    task.timestamp = 1e+99;
     App.progSafeCheck += 1;
     App.progress = {
       progress: 0
     };
-    if (!("images" in s)) {
-      if ("detail" in s) {
-        $.error(s.detail.substr(0, 100));
+    if (!("images" in resultData)) {
+      if ("detail" in resultData) {
+        $.error(resultData.detail.substr(0, 100));
       } else {
         $.error(CFG.server + " generation failed. try [reset prompt] in [Help].");
       }
-      x();
+      cancelFn();
       return;
     }
-    var u = -1;
-    for (var J of s.images) {
-      if (!J.startsWith("data:")) {
-        J = "data:image/png;base64," + J;
+    var imgIdx = -1;
+    for (var imgDataUrl of resultData.images) {
+      if (!imgDataUrl.startsWith("data:")) {
+        imgDataUrl = "data:image/png;base64," + imgDataUrl;
       }
-      var G = 0;
-      if (!("out_img" in l)) {
-        l.out_img = [J];
+      var startImgIdx = 0;
+      if (!("out_img" in task)) {
+        task.out_img = [imgDataUrl];
       } else {
-        G = parseInt(h.getAttribute("out_img")) + 1;
-        l.out_img.splice(G, 0, J);
+        startImgIdx = parseInt(boxEl.getAttribute("out_img")) + 1;
+        task.out_img.splice(startImgIdx, 0, imgDataUrl);
       }
-      if (u == -1) {
-        u = G;
-        CV.loadDataURL(CV.mainC, J, w.x, w.y, w.w, w.h);
+      if (imgIdx == -1) {
+        imgIdx = startImgIdx;
+        CV.loadDataURL(CV.mainC, imgDataUrl, url.x, url.y, url.w, url.h);
         $.error("");
       }
-      h.setAttribute("out_img", G);
+      boxEl.setAttribute("out_img", startImgIdx);
     }
-    h.setAttribute("out_img", u);
-    h.classList.add("decision_box");
-    h.querySelector(".box_remark").innerHTML = "";
-    h.querySelector(".box_str").innerHTML = "<div class=\"box_input\" style=\"display:flex;align-items:center;\">\n    <button type=\"button\" data-id=\"box_confirm\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%\">✔️</span></button>\n    <button type=\"button\" data-id=\"box_retry\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%;font-weight:bold\">+<span class=\"box_retry_count\">1</span></span></button>\n    <span class=\"box_of\" style=\"height:3em;margin:0 0.5em;display:inline-flex;align-items:center;\"></span>\n    <button type=\"button\" data-id=\"box_prev\" style=\"height:3em;width:3em;\"><span style=\"font-size:150%\">🡄</span></button>\n    <button type=\"button\" data-id=\"box_next\" style=\"height:3em;width:3em;\"><span style=\"font-size:150%\">🡆</span></button>\n    <button type=\"button\" data-id=\"box_remove\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%\">🗑️</span></button>\n    <button type=\"button\" data-id=\"box_cancel\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%\">❌</span></button>\n    </div>";
-    h.querySelector(".box_of").innerHTML = parseInt(h.getAttribute("out_img")) + 1 + " of " + l.out_img.length;
-    h.onmousemove = f => {
+    boxEl.setAttribute("out_img", imgIdx);
+    boxEl.classList.add("decision_box");
+    boxEl.querySelector(".box_remark").innerHTML = "";
+    boxEl.querySelector(".box_str").innerHTML = "<div class=\"box_input\" style=\"display:flex;align-items:center;\">\n    <button type=\"button\" data-id=\"box_confirm\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%\">✔️</span></button>\n    <button type=\"button\" data-id=\"box_retry\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%;font-weight:bold\">+<span class=\"box_retry_count\">1</span></span></button>\n    <span class=\"box_of\" style=\"height:3em;margin:0 0.5em;display:inline-flex;align-items:center;\"></span>\n    <button type=\"button\" data-id=\"box_prev\" style=\"height:3em;width:3em;\"><span style=\"font-size:150%\">🡄</span></button>\n    <button type=\"button\" data-id=\"box_next\" style=\"height:3em;width:3em;\"><span style=\"font-size:150%\">🡆</span></button>\n    <button type=\"button\" data-id=\"box_remove\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%\">🗑️</span></button>\n    <button type=\"button\" data-id=\"box_cancel\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%\">❌</span></button>\n    </div>";
+    boxEl.querySelector(".box_of").innerHTML = parseInt(boxEl.getAttribute("out_img")) + 1 + " of " + task.out_img.length;
+    boxEl.onmousemove = mouseEvt => {
       $.hide(BOX);
-      if (h.querySelector(".box_input")) {
-        var T = $.size(BOX);
-        var N = (f.clientX - f.target.getBoundingClientRect().left) / (T.w + 1);
-        var K = (f.clientY - f.target.getBoundingClientRect().top) / (T.h + 1);
-        if (K < 0.7) {
-          $.show(h.querySelector(".box_str"));
+      if (boxEl.querySelector(".box_input")) {
+        var boxRect = $.size(BOX);
+        var relX = (mouseEvt.clientX - mouseEvt.target.getBoundingClientRect().left) / (boxRect.w + 1);
+        var relY = (mouseEvt.clientY - mouseEvt.target.getBoundingClientRect().top) / (boxRect.h + 1);
+        if (relY < 0.7) {
+          $.show(boxEl.querySelector(".box_str"));
         } else {
-          $.hide(h.querySelector(".box_str"));
+          $.hide(boxEl.querySelector(".box_str"));
         }
       }
     };
-    h.onmouseleave = f => {
+    boxEl.onmouseleave = mouseEvt => {
       $.show(BOX);
-      if (h.querySelector(".box_input")) {
-        $.hide(h.querySelector(".box_str"));
+      if (boxEl.querySelector(".box_input")) {
+        $.hide(boxEl.querySelector(".box_str"));
       }
     };
-    if (h.matches(":hover")) {
+    if (boxEl.matches(":hover")) {
       $.hide(BOX);
-      $.show(h.querySelector(".box_str"));
+      $.show(boxEl.querySelector(".box_str"));
     }
-    mylog("#draw/done/" + w.w + "/" + w.h);
+    mylog("#draw/done/" + url.w + "/" + url.h);
   };
-  l.funBad = s => {
-    delete App.task[v];
+  task.funBad = resultData => {
+    delete App.task[taskId];
     App.progSafeCheck += 1;
     App.progress = {
       progress: 0
     };
-    x();
-    console.log(s);
-    var u = s.toString();
-    var J = "Error with " + CFG.server + ", or invalid prompt. Run latest AUTOMATIC1111 with --api.";
+    cancelFn();
+    console.log(resultData);
+    var imgIdx = resultData.toString();
+    var imgDataUrl = "Error with " + CFG.server + ", or invalid prompt. Run latest AUTOMATIC1111 with --api.";
     if (!CFG.server.includes("127.0.0.1") && !CFG.server.startsWith("https://")) {
-      J += "<br>Moreover, google \"enable mixed content\" and change site settings.";
+      imgDataUrl += "<br>Moreover, google \"enable mixed content\" and change site settings.";
     }
-    $.error(J);
+    $.error(imgDataUrl);
     setBtn("help_show", true);
-    mylog("#draw/err/" + u.substr(0, 100));
+    mylog("#draw/err/" + imgIdx.substr(0, 100));
   };
-  l.status = 0;
-  l.timestamp = Date.now();
+  task.status = 0;
+  task.timestamp = Date.now();
   App.sync();
 };
-CV.extraTask = function (Z) {
-  let h = $.size(BOX);
-  var w = CV.new(h.w, h.h);
-  w.getContext("2d").drawImage(CV.main, h.x, h.y, h.w, h.h, 0, 0, h.w, h.h);
-  var v = "";
-  var l = App.getServer();
-  v = l + "/sdapi/v1/extra-single-image";
+CV.extraTask = function (scaleFactor) {
+  let boxSize = $.size(BOX);
+  var tmpCanvas = CV.new(boxSize.w, boxSize.h);
+  tmpCanvas.getContext("2d").drawImage(CV.main, boxSize.x, boxSize.y, boxSize.w, boxSize.h, 0, 0, boxSize.w, boxSize.h);
+  var apiUrl = "";
+  var serverUrl = App.getServer();
+  apiUrl = serverUrl + "/sdapi/v1/extra-single-image";
   prompt = {
     upscaler_1: "ESRGAN_4x",
     extras_upscaler_2_visibility: 0,
-    upscaling_resize: Z,
-    image: w.toDataURL()
+    upscaling_resize: scaleFactor,
+    image: tmpCanvas.toDataURL()
   };
-  $.error("Running ESRGAN_4x to " + Z + "x... (transparency will become black)");
-  post(v, prompt).then(g => {
-    var x = g.image;
-    if (!x.startsWith("data:")) {
-      x = "data:image/png;base64," + x;
+  $.error("Running ESRGAN_4x to " + scaleFactor + "x... (transparency will become black)");
+  post(apiUrl, prompt).then(result => {
+    var imgDataUrl = result.image;
+    if (!imgDataUrl.startsWith("data:")) {
+      imgDataUrl = "data:image/png;base64," + imgDataUrl;
     }
-    var s = new Image();
-    s.onload = function () {
-      w = CV.new(h.w * Z, h.h * Z);
-      w.getContext("2d").drawImage(s, 0, 0, h.w * Z, h.h * Z);
-      CV.loadToNew(w);
+    var img = new Image();
+    img.onload = function () {
+      tmpCanvas = CV.new(boxSize.w * scaleFactor, boxSize.h * scaleFactor);
+      tmpCanvas.getContext("2d").drawImage(img, 0, 0, boxSize.w * scaleFactor, boxSize.h * scaleFactor);
+      CV.loadToNew(tmpCanvas);
     };
-    s.src = x;
-  }).catch(g => {
-    console.log(g);
-    var x = "Error with " + CFG.server + ". Try updating AUTOMATIC1111.";
-    $.error(x);
+    img.src = imgDataUrl;
+  }).catch(result => {
+    console.log(result);
+    var imgDataUrl = "Error with " + CFG.server + ". Try updating AUTOMATIC1111.";
+    $.error(imgDataUrl);
   });
 };
-$.onClick = function (Z) {
-  var h = Z.target.closest("button");
-  if (h) {
+$.onClick = function (evt) {
+  var btn = evt.target.closest("button");
+  if (btn) {
     document.getSelection().removeAllRanges();
     document.activeElement.blur();
     gButton = -1;
-    var w = h.classList;
-    var v = h.dataset.id;
+    var btnClasses = btn.classList;
+    var btnId = btn.dataset.id;
     $.error("");
-    if (v == "img_save") {
+    if (btnId == "img_save") {
       CV.save();
-    } else if (v == "img_load") {
+    } else if (btnId == "img_load") {
       $("#imageLoader").click();
-    } else if (v == "img_copy") {
+    } else if (btnId == "img_copy") {
       CV.copy();
-    } else if (v == "img_paste") {
+    } else if (btnId == "img_paste") {
       CV.paste();
-    } else if (v == "img_undo") {
+    } else if (btnId == "img_undo") {
       CV.undo();
-    } else if (v == "img_redo") {
+    } else if (btnId == "img_redo") {
       CV.redo();
-    } else if (v.startsWith("box_")) {
-      var l = h.closest(".drawBox");
-      var g = $.size(l);
-      var x = App.task[parseInt(l.getAttribute("task"))];
-      var s = x.prompt;
-      if (x.status == 1) {
+    } else if (btnId.startsWith("box_")) {
+      var boxEl = btn.closest(".drawBox");
+      var boxSize = $.size(boxEl);
+      var task = App.task[parseInt(boxEl.getAttribute("task"))];
+      var prompt = task.prompt;
+      if (task.status == 1) {
         post(App.getServer() + "/sdapi/v1/interrupt", {});
         return;
       }
-      var u = false;
-      var J = v == "box_retry";
-      var G = v == "box_next";
-      var H = v == "box_prev";
-      if (v == "box_remove") {
+      var shouldClose = false;
+      var isRetry = btnId == "box_retry";
+      var isNext = btnId == "box_next";
+      var isPrev = btnId == "box_prev";
+      if (btnId == "box_remove") {
         try {
-          if (l.querySelector(".box_of").innerHTML.startsWith("0 of")) {} else if (x.out_img.length <= 1) {
-            delete x.out_img;
-            J = true;
+          if (boxEl.querySelector(".box_of").innerHTML.startsWith("0 of")) {} else if (task.out_img.length <= 1) {
+            delete task.out_img;
+            isRetry = true;
           } else {
-            var f = parseInt(l.getAttribute("out_img"));
-            if (f == x.out_img.length - 1) {
-              x.out_img.splice(f, 1);
-              H = true;
+            var imgIdx = parseInt(boxEl.getAttribute("out_img"));
+            if (imgIdx == task.out_img.length - 1) {
+              task.out_img.splice(imgIdx, 1);
+              isPrev = true;
             } else {
-              G = true;
+              isNext = true;
             }
           }
-        } catch (F) {}
+        } catch (err) {}
       }
-      if (J) {
-        s.n_iter = parseInt(l.querySelector(".box_retry_count").innerHTML);
-        CV.sendPrompt(s, l);
-        if ("init_images" in s) {
-          CV.loadDataURL(CV.mainC, s.init_images[0], g.x, g.y, g.w, g.h);
+      if (isRetry) {
+        prompt.n_iter = parseInt(boxEl.querySelector(".box_retry_count").innerHTML);
+        CV.sendPrompt(prompt, boxEl);
+        if ("init_images" in prompt) {
+          CV.loadDataURL(CV.mainC, prompt.init_images[0], boxSize.x, boxSize.y, boxSize.w, boxSize.h);
         } else {
-          var T = CV.new(g.w, g.h);
-          var N = T.getContext("2d");
-          CV.noise(N, g.w, g.h);
-          CV.mainC.drawImage(T, g.x, g.y);
+          var noiseCanvas = CV.new(boxSize.w, boxSize.h);
+          var noiseCtx = noiseCanvas.getContext("2d");
+          CV.noise(noiseCtx, boxSize.w, boxSize.h);
+          CV.mainC.drawImage(noiseCanvas, boxSize.x, boxSize.y);
         }
-      } else if (G) {
-        if (v == "box_next") {
-          var K = min(x.out_img.length - 1, parseInt(l.getAttribute("out_img")) + 1);
-          if (K != f) {
-            CV.loadDataURL(CV.mainC, x.out_img[K], g.x, g.y, g.w, g.h);
-            l.setAttribute("out_img", K);
-            l.querySelector(".box_of").innerHTML = K + 1 + " of " + x.out_img.length;
+      } else if (isNext) {
+        if (btnId == "box_next") {
+          var nextIdx = min(task.out_img.length - 1, parseInt(boxEl.getAttribute("out_img")) + 1);
+          if (nextIdx != imgIdx) {
+            CV.loadDataURL(CV.mainC, task.out_img[nextIdx], boxSize.x, boxSize.y, boxSize.w, boxSize.h);
+            boxEl.setAttribute("out_img", nextIdx);
+            boxEl.querySelector(".box_of").innerHTML = nextIdx + 1 + " of " + task.out_img.length;
           }
         } else {
-          var f = parseInt(l.getAttribute("out_img"));
-          x.out_img.splice(f, 1);
-          CV.loadDataURL(CV.mainC, x.out_img[f], g.x, g.y, g.w, g.h);
-          l.querySelector(".box_of").innerHTML = f + 1 + " of " + x.out_img.length;
+          var imgIdx = parseInt(boxEl.getAttribute("out_img"));
+          task.out_img.splice(imgIdx, 1);
+          CV.loadDataURL(CV.mainC, task.out_img[imgIdx], boxSize.x, boxSize.y, boxSize.w, boxSize.h);
+          boxEl.querySelector(".box_of").innerHTML = imgIdx + 1 + " of " + task.out_img.length;
         }
-      } else if (H) {
-        var f = parseInt(l.getAttribute("out_img"));
-        var K = max(-1, f - 1);
-        if (!("init_images" in s)) {
-          K = max(0, K);
+      } else if (isPrev) {
+        var imgIdx = parseInt(boxEl.getAttribute("out_img"));
+        var nextIdx = max(-1, imgIdx - 1);
+        if (!("init_images" in prompt)) {
+          nextIdx = max(0, nextIdx);
         }
-        if (K != f) {
-          if (K >= 0) {
-            CV.loadDataURL(CV.mainC, x.out_img[K], g.x, g.y, g.w, g.h);
+        if (nextIdx != imgIdx) {
+          if (nextIdx >= 0) {
+            CV.loadDataURL(CV.mainC, task.out_img[nextIdx], boxSize.x, boxSize.y, boxSize.w, boxSize.h);
           } else {
-            CV.mainC.clearRect(g.x, g.y, g.w, g.h);
-            CV.loadDataURL(CV.mainC, x.orig_img, g.x, g.y, g.w, g.h);
+            CV.mainC.clearRect(boxSize.x, boxSize.y, boxSize.w, boxSize.h);
+            CV.loadDataURL(CV.mainC, task.orig_img, boxSize.x, boxSize.y, boxSize.w, boxSize.h);
           }
-          l.setAttribute("out_img", K);
-          l.querySelector(".box_of").innerHTML = K + 1 + " of " + x.out_img.length;
+          boxEl.setAttribute("out_img", nextIdx);
+          boxEl.querySelector(".box_of").innerHTML = nextIdx + 1 + " of " + task.out_img.length;
         }
-      } else if (v == "box_confirm") {
-        CV.maskC.clearRect(g.x, g.y, g.w, g.h);
-        u = true;
-      } else if (v == "box_cancel") {
-        CV.mainC.clearRect(g.x, g.y, g.w, g.h);
-        CV.loadDataURL(CV.mainC, x.orig_img, g.x, g.y, g.w, g.h);
-        u = true;
+      } else if (btnId == "box_confirm") {
+        CV.maskC.clearRect(boxSize.x, boxSize.y, boxSize.w, boxSize.h);
+        shouldClose = true;
+      } else if (btnId == "box_cancel") {
+        CV.mainC.clearRect(boxSize.x, boxSize.y, boxSize.w, boxSize.h);
+        CV.loadDataURL(CV.mainC, task.orig_img, boxSize.x, boxSize.y, boxSize.w, boxSize.h);
+        shouldClose = true;
       }
-      if (u) {
-        delete App.task[parseInt(l.getAttribute("task"))];
-        l.remove();
+      if (shouldClose) {
+        delete App.task[parseInt(boxEl.getAttribute("task"))];
+        boxEl.remove();
         $.show(BOX);
       }
     } else {
-      w.toggle("active");
-      setBtn(v, w.contains("active"));
+      btnClasses.toggle("active");
+      setBtn(btnId, btnClasses.contains("active"));
     }
   }
 };
 document.addEventListener("click", $.onClick);
 window.onbeforeunload = () => 1;
-document.addEventListener("dragover", Z => {
-  Z.preventDefault();
-  Z.stopPropagation();
+document.addEventListener("dragover", evt => {
+  evt.preventDefault();
+  evt.stopPropagation();
 });
-document.addEventListener("drop", Z => {
-  Z.preventDefault();
-  Z.stopPropagation();
+document.addEventListener("drop", evt => {
+  evt.preventDefault();
+  evt.stopPropagation();
   if (App.eeMoving) {
     $.error("Please place the last image first.");
     return;
   }
   $.error("Loading image...");
-  CV.loadBlob(null, Z.dataTransfer.files[0], h => {
-    CV.loadToNew(h);
+  CV.loadBlob(null, evt.dataTransfer.files[0], canvas => {
+    CV.loadToNew(canvas);
   });
 });
-document.addEventListener("keydown", Z => {
-  if (Z.repeat) {
+document.addEventListener("keydown", evt => {
+  if (evt.repeat) {
     return;
   }
-  if (Z.key.toLowerCase() == "escape") {
-    App.clearDefault(Z);
+  if (evt.key.toLowerCase() == "escape") {
+    App.clearDefault(evt);
     setBtn("prompt_show", false);
     setBtn("config_show", false);
     setBtn("help_show", false);
-  } else if ($.type(Z.target) == "body") {
-    if (Z.key.toLowerCase() == " ") {
-      App.clearDefault(Z);
+  } else if ($.type(evt.target) == "body") {
+    if (evt.key.toLowerCase() == " ") {
+      App.clearDefault(evt);
       toggleBtn("prompt_show");
-    } else if (Z.key.toLowerCase() == "shift") {
-      App.clearDefault(Z);
+    } else if (evt.key.toLowerCase() == "shift") {
+      App.clearDefault(evt);
       toggleBtn("mask_draw");
-    } else if (Z.key.toLowerCase() == "tab") {
-      App.clearDefault(Z);
+    } else if (evt.key.toLowerCase() == "tab") {
+      App.clearDefault(evt);
       toggleBtn("mask_show");
-    } else if (Z.key.toLowerCase() == "`") {
-      App.clearDefault(Z);
+    } else if (evt.key.toLowerCase() == "`") {
+      App.clearDefault(evt);
       toggleBtn("brush_draw");
-    } else if (Z.key.toLowerCase() == "g") {
-      App.clearDefault(Z);
+    } else if (evt.key.toLowerCase() == "g") {
+      App.clearDefault(evt);
       toggleBtn("grid_mode");
-    } else if (Z.key.toLowerCase() == "z" && Z.ctrlKey) {
-      App.clearDefault(Z);
+    } else if (evt.key.toLowerCase() == "z" && evt.ctrlKey) {
+      App.clearDefault(evt);
       CV.undo();
-    } else if (Z.key.toLowerCase() == "y" && Z.ctrlKey) {
-      App.clearDefault(Z);
+    } else if (evt.key.toLowerCase() == "y" && evt.ctrlKey) {
+      App.clearDefault(evt);
       CV.redo();
-    } else if (Z.key.toLowerCase() == "s" && Z.ctrlKey) {
-      App.clearDefault(Z);
+    } else if (evt.key.toLowerCase() == "s" && evt.ctrlKey) {
+      App.clearDefault(evt);
       CV.save();
-    } else if (Z.key.toLowerCase() == "o" && Z.ctrlKey) {
-      App.clearDefault(Z);
+    } else if (evt.key.toLowerCase() == "o" && evt.ctrlKey) {
+      App.clearDefault(evt);
       $("#imageLoader").click();
     }
   }
 });
-document.addEventListener("contextmenu", Z => {
-  if ($.type(Z.target) == "textarea") {
+document.addEventListener("contextmenu", evt => {
+  if ($.type(evt.target) == "textarea") {
     return;
   }
-  if (Z.target.closest("#help")) {
+  if (evt.target.closest("#help")) {
     return;
   }
-  preventDefault(Z);
+  preventDefault(evt);
 });
-document.addEventListener("copy", Z => {
-  if ($.type(Z.target) == "body") {
-    App.clearDefault(Z);
+document.addEventListener("copy", evt => {
+  if ($.type(evt.target) == "body") {
+    App.clearDefault(evt);
     CV.copy();
   }
 });
-document.addEventListener("paste", Z => {
-  if ($.type(Z.target) == "body") {
-    App.clearDefault(Z);
+document.addEventListener("paste", evt => {
+  if ($.type(evt.target) == "body") {
+    App.clearDefault(evt);
     CV.paste();
   }
 });
-$("#palette").addEventListener("click", function (Z) {
-  var h = Z.target;
-  gBrush.color = h.style.background;
+$("#palette").addEventListener("click", function (evt) {
+  var target = evt.target;
+  gBrush.color = target.style.background;
   if ($.isActive("brush_draw")) {
     updateBrush(gBrush.sz);
   }
 });
-$("#imageLoader").addEventListener("change", Z => {
+$("#imageLoader").addEventListener("change", evt => {
   CV.load();
 }, false);
-$("#tools").addEventListener("mouseenter", function (Z) {
+$("#tools").addEventListener("mouseenter", function (evt) {
   $.hide(BOX);
 });
-$("#tools").addEventListener("mouseleave", function (Z) {
+$("#tools").addEventListener("mouseleave", function (evt) {
   $.show(BOX);
 });
 $("#prompt_sampler").addEventListener("change", App.syncPrompt);
 $("#prompt_fill").addEventListener("change", App.syncPrompt);
 $("#prompt_model").addEventListener("change", App.syncModel);
-SKETCH.addEventListener("mousedown", function (Z) {
-  var v = gMouseNow.x;
-  var l = gMouseNow.y;
+SKETCH.addEventListener("mousedown", function (evt) {
+  var mouseX = gMouseNow.x;
+  var mouseY = gMouseNow.y;
   $.error("");
   document.getSelection().removeAllRanges();
-  if (Z.target.closest(".decision_box")) {
+  if (evt.target.closest(".decision_box")) {
     return;
   }
-  if ($.type(Z.target) == "select") {
+  if ($.type(evt.target) == "select") {
     return;
   }
-  if (Z.button == 0) {
-    if (Z.target.closest(".box_input")) {
+  if (evt.button == 0) {
+    if (evt.target.closest(".box_input")) {
       return;
     }
-    if (Z.target.closest(".box_inputX")) {
+    if (evt.target.closest(".box_inputX")) {
       return;
     }
   }
-  App.clearDefault(Z);
+  App.clearDefault(evt);
   if (App.eeMoving) {
-    if (Z.button == 0) {
-      var g = App.eeMoving.width;
-      var s = App.eeMoving.height;
-      var u = $.isActive("grid_mode") ? GRIDSZ : 1;
-      v = floor(v / u) * u;
-      l = floor(l / u) * u;
-      var J = v;
-      var G = l;
-      if (Z.ctrlKey) {
-        J = floor((WW - g) / 2 / GRIDSZ) * GRIDSZ;
-        G = floor((HH - s) / 2 / GRIDSZ) * GRIDSZ;
+    if (evt.button == 0) {
+      var imgW = App.eeMoving.width;
+      var imgH = App.eeMoving.height;
+      var snapStep = $.isActive("grid_mode") ? GRIDSZ : 1;
+      mouseX = floor(mouseX / snapStep) * snapStep;
+      mouseY = floor(mouseY / snapStep) * snapStep;
+      var placeX = mouseX;
+      var placeY = mouseY;
+      if (evt.ctrlKey) {
+        placeX = floor((WW - imgW) / 2 / GRIDSZ) * GRIDSZ;
+        placeY = floor((HH - imgH) / 2 / GRIDSZ) * GRIDSZ;
       }
       CV.snapshot();
-      CV.mainC.drawImage(App.eeMoving, 0, 0, g, s, J, G, g, s);
+      CV.mainC.drawImage(App.eeMoving, 0, 0, imgW, imgH, placeX, placeY, imgW, imgH);
     }
     App.eeMoving.remove();
-    if (Z.button == 2 && App.eeMovingRestore != null) {
+    if (evt.button == 2 && App.eeMovingRestore != null) {
       CV.mainC.drawImage(App.eeMoving, App.eeMovingRestore.x, App.eeMovingRestore.y);
     }
     App.eeMoving = null;
     App.eeMovingRestore = null;
     return;
   }
-  var H = $.isActive("mask_draw");
-  var f = $.isActive("brush_draw");
-  if (f && Z.ctrlKey && Z.button == 0) {
-    var T = CV.mainC.getImageData(v, l, 1, 1).data;
-    if (T[3] > 0) {
-      T = "rgb(" + T[0] + "," + T[1] + "," + T[2] + ")";
-      gBrush.color = T;
+  var isMaskDraw = $.isActive("mask_draw");
+  var isBrushDraw = $.isActive("brush_draw");
+  if (isBrushDraw && evt.ctrlKey && evt.button == 0) {
+    var pixel = CV.mainC.getImageData(mouseX, mouseY, 1, 1).data;
+    if (pixel[3] > 0) {
+      pixel = "rgb(" + pixel[0] + "," + pixel[1] + "," + pixel[2] + ")";
+      gBrush.color = pixel;
       updateBrush(gBrush.sz);
     }
     return;
   }
-  if (H || f) {
+  if (isMaskDraw || isBrushDraw) {
     CV.snapshot();
-    gButton = Z.button;
-    gMouseLast.x = v;
-    gMouseLast.y = l;
-    var N = H ? CV.maskC : CV.mainC;
-    N.fillStyle = H ? "#fff" : gBrush.color;
-    if (Z.button == 2) {
-      N.globalCompositeOperation = "destination-out";
+    gButton = evt.button;
+    gMouseLast.x = mouseX;
+    gMouseLast.y = mouseY;
+    var ctx = isMaskDraw ? CV.maskC : CV.mainC;
+    ctx.fillStyle = isMaskDraw ? "#fff" : gBrush.color;
+    if (evt.button == 2) {
+      ctx.globalCompositeOperation = "destination-out";
     }
-    N.beginPath();
-    N.arc(v, l, gBrush.sz / 2, 0, Math.PI * 2);
-    N.fill();
-    N.globalCompositeOperation = "source-over";
-    if (f && Z.button == 0) {
-      N = CV.maskC;
-      N.fillStyle = "#fff";
-      N.beginPath();
-      N.arc(v, l, (gBrush.sz + 4) / 2, 0, Math.PI * 2);
-      N.fill();
+    ctx.beginPath();
+    ctx.arc(mouseX, mouseY, gBrush.sz / 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalCompositeOperation = "source-over";
+    if (isBrushDraw && evt.button == 0) {
+      ctx = CV.maskC;
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.arc(mouseX, mouseY, (gBrush.sz + 4) / 2, 0, Math.PI * 2);
+      ctx.fill();
     }
     return;
   }
-  if (gButton >= 0 && Z.button == 2) {
+  if (gButton >= 0 && evt.button == 2) {
     gButton = -1;
-    updateBOX(v, l, v, l);
+    updateBOX(mouseX, mouseY, mouseX, mouseY);
   } else if (gButton == -1) {
-    gButton = Z.button;
-    gMouseLast.x = v;
-    gMouseLast.y = l;
-    updateBOX(v, l, v, l);
+    gButton = evt.button;
+    gMouseLast.x = mouseX;
+    gMouseLast.y = mouseY;
+    updateBOX(mouseX, mouseY, mouseX, mouseY);
   } else {
-    var K = $.size(BOX);
+    var imgIdx = $.size(BOX);
     if (gButton == 0) {
       CV.snapshot();
-      console.log("send", K);
-      CV.draw(K.x, K.y, K.w, K.h);
+      console.log("send", imgIdx);
+      CV.draw(imgIdx.x, imgIdx.y, imgIdx.w, imgIdx.h);
     } else {
-      var A = BOX.querySelector(".box_select");
-      A = A.options[A.selectedIndex].text.toLowerCase();
-      A = Array.from(A).slice(1).join("");
-      if (A == "erase") {
+      var selectEl = BOX.querySelector(".box_select");
+      selectEl = selectEl.options[selectEl.selectedIndex].text.toLowerCase();
+      selectEl = Array.from(selectEl).slice(1).join("");
+      if (selectEl == "erase") {
         CV.snapshot();
         CV.mainC.fillStyle = "#fff";
         CV.mainC.globalCompositeOperation = "destination-out";
-        CV.mainC.fillRect(K.x, K.y, K.w, K.h);
+        CV.mainC.fillRect(imgIdx.x, imgIdx.y, imgIdx.w, imgIdx.h);
         CV.mainC.globalCompositeOperation = "source-over";
-      } else if (A == "move") {
+      } else if (selectEl == "move") {
         if (App.eeMoving) {
           $.error("Please place the last image first.");
         } else {
-          var q = CV.new(K.w, K.h);
-          q.getContext("2d").drawImage(CV.main, K.x, K.y, K.w, K.h, 0, 0, K.w, K.h);
+          var tmpCanvas = CV.new(imgIdx.w, imgIdx.h);
+          tmpCanvas.getContext("2d").drawImage(CV.main, imgIdx.x, imgIdx.y, imgIdx.w, imgIdx.h, 0, 0, imgIdx.w, imgIdx.h);
           App.eeMovingRestore = {
-            x: K.x,
-            y: K.y
+            x: imgIdx.x,
+            y: imgIdx.y
           };
-          CV.loadToNew(q);
+          CV.loadToNew(tmpCanvas);
           CV.mainC.fillStyle = "#fff";
           CV.mainC.globalCompositeOperation = "destination-out";
-          CV.mainC.fillRect(K.x, K.y, K.w, K.h);
+          CV.mainC.fillRect(imgIdx.x, imgIdx.y, imgIdx.w, imgIdx.h);
           CV.mainC.globalCompositeOperation = "source-over";
         }
-      } else if (A == "clone") {
+      } else if (selectEl == "clone") {
         if (App.eeMoving) {
           $.error("Please place the last image first.");
         } else {
-          var q = CV.new(K.w, K.h);
-          q.getContext("2d").drawImage(CV.main, K.x, K.y, K.w, K.h, 0, 0, K.w, K.h);
-          CV.loadToNew(q);
+          var tmpCanvas = CV.new(imgIdx.w, imgIdx.h);
+          tmpCanvas.getContext("2d").drawImage(CV.main, imgIdx.x, imgIdx.y, imgIdx.w, imgIdx.h, 0, 0, imgIdx.w, imgIdx.h);
+          CV.loadToNew(tmpCanvas);
         }
-      } else if (A == "mask" || A == "unmask") {
+      } else if (selectEl == "mask" || selectEl == "unmask") {
         CV.snapshot();
-        var N = CV.maskC;
-        N.fillStyle = "#fff";
-        if (A == "unmask") {
-          N.globalCompositeOperation = "destination-out";
+        var ctx = CV.maskC;
+        ctx.fillStyle = "#fff";
+        if (selectEl == "unmask") {
+          ctx.globalCompositeOperation = "destination-out";
         }
-        N.beginPath();
-        N.rect(K.x, K.y, K.w, K.h);
-        N.fill();
-        N.globalCompositeOperation = "source-over";
-      } else if (A == "scale2x" || A == "scale3x" || A == "scale4x") {
-        if (A == "scale2x") {
+        ctx.beginPath();
+        ctx.rect(imgIdx.x, imgIdx.y, imgIdx.w, imgIdx.h);
+        ctx.fill();
+        ctx.globalCompositeOperation = "source-over";
+      } else if (selectEl == "scale2x" || selectEl == "scale3x" || selectEl == "scale4x") {
+        if (selectEl == "scale2x") {
           CV.extraTask(2);
         }
-        if (A == "scale3x") {
+        if (selectEl == "scale3x") {
           CV.extraTask(3);
         }
-        if (A == "scale4x") {
+        if (selectEl == "scale4x") {
           CV.extraTask(4);
         }
       }
@@ -1663,32 +1663,32 @@ SKETCH.addEventListener("mousedown", function (Z) {
     gButton = -1;
   }
 });
-SKETCH.addEventListener("mouseup", function (Z) {
+SKETCH.addEventListener("mouseup", function (evt) {
   if ($.isActive("mask_draw") || $.isActive("brush_draw")) {
     gButton = -1;
   }
 });
-SKETCH.addEventListener("mouseenter", function (Z) {
+SKETCH.addEventListener("mouseenter", function (evt) {
   document.activeElement.blur();
 });
-SKETCH.addEventListener("mousemove", function (Z) {
-  var h = window.getComputedStyle(SKETCH);
-  var w = Z.pageX - parseFloat(h.left);
-  var v = Z.pageY - parseFloat(h.top);
-  gMouseNow.x = w;
-  gMouseNow.y = v;
-  App.mousemove(Z);
+SKETCH.addEventListener("mousemove", function (evt) {
+  var style = window.getComputedStyle(SKETCH);
+  var mouseX = evt.pageX - parseFloat(style.left);
+  var mouseY = evt.pageY - parseFloat(style.top);
+  gMouseNow.x = mouseX;
+  gMouseNow.y = mouseY;
+  App.mousemove(evt);
 });
-document.addEventListener("wheel", function (Z) {
-  if ($.type(Z.target) == "select") {
-    if (Z.deltaY < 0) {
-      Z.target.selectedIndex = Math.max(Z.target.selectedIndex - 1, 0);
+document.addEventListener("wheel", function (evt) {
+  if ($.type(evt.target) == "select") {
+    if (evt.deltaY < 0) {
+      evt.target.selectedIndex = Math.max(evt.target.selectedIndex - 1, 0);
     }
-    if (Z.deltaY > 0) {
-      Z.target.selectedIndex = Math.min(Z.target.selectedIndex + 1, Z.target.length - 1);
+    if (evt.deltaY > 0) {
+      evt.target.selectedIndex = Math.min(evt.target.selectedIndex + 1, evt.target.length - 1);
     }
-    if (Z.target.id.startsWith("prompt")) {
-      if (Z.target.id == "prompt_model") {
+    if (evt.target.id.startsWith("prompt")) {
+      if (evt.target.id == "prompt_model") {
         App.syncModel();
       } else {
         App.syncPrompt();
@@ -1696,121 +1696,121 @@ document.addEventListener("wheel", function (Z) {
     }
   }
 });
-SKETCH.addEventListener("wheel", function (Z) {
-  if (Z.target.closest("button[data-id=\"box_retry\"]")) {
-    App.clearDefault(Z);
-    var h = Z.target.closest("button");
-    var w = h.querySelector(".box_retry_count");
-    w.innerHTML = min(99, max(1, parseInt(w.innerHTML) + sign(Z.deltaY)));
-  } else if (Z.target.closest(".decision_box")) {
-    App.clearDefault(Z);
-    var h = Z.target.closest(".decision_box");
+SKETCH.addEventListener("wheel", function (evt) {
+  if (evt.target.closest("button[data-id=\"box_retry\"]")) {
+    App.clearDefault(evt);
+    var btn = evt.target.closest("button");
+    var el = btn.querySelector(".box_retry_count");
+    el.innerHTML = min(99, max(1, parseInt(el.innerHTML) + sign(evt.deltaY)));
+  } else if (evt.target.closest(".decision_box")) {
+    App.clearDefault(evt);
+    var btn = evt.target.closest(".decision_box");
     try {
-      if (Z.deltaY < 0) {
-        h.querySelector("button[data-id=\"box_prev\"]").click();
-      } else if (Z.deltaY > 0) {
-        h.querySelector("button[data-id=\"box_next\"]").click();
+      if (evt.deltaY < 0) {
+        btn.querySelector("button[data-id=\"box_prev\"]").click();
+      } else if (evt.deltaY > 0) {
+        btn.querySelector("button[data-id=\"box_next\"]").click();
       }
-    } catch (l) {}
+    } catch (err) {}
   } else if ($.isActive("mask_draw") || $.isActive("brush_draw")) {
-    App.clearDefault(Z);
-    updateBrush(gBrush.sz + sign(Z.deltaY) * 2);
+    App.clearDefault(evt);
+    updateBrush(gBrush.sz + sign(evt.deltaY) * 2);
   } else if (gButton == 2) {
-    App.clearDefault(Z);
+    App.clearDefault(evt);
     try {
-      var w = BOX.querySelector(".box_select");
-      if (Z.deltaY < 0) {
-        w.selectedIndex = Math.max(w.selectedIndex - 1, 0);
-      } else if (Z.deltaY > 0) {
-        w.selectedIndex = Math.min(w.selectedIndex + 1, w.length - 1);
+      var el = BOX.querySelector(".box_select");
+      if (evt.deltaY < 0) {
+        el.selectedIndex = Math.max(el.selectedIndex - 1, 0);
+      } else if (evt.deltaY > 0) {
+        el.selectedIndex = Math.min(el.selectedIndex + 1, el.length - 1);
       }
-      w.dispatchEvent(new Event("change"));
-    } catch (H) {}
+      el.dispatchEvent(new Event("change"));
+    } catch (err2) {}
   } else if (gButton == 0) {
-    App.clearDefault(Z);
+    App.clearDefault(evt);
     try {
-      if (Z.target.closest(".box_strength")) {
-        var w = BOX.querySelector(".box_strength");
-        w.value = parseFloat(w.value) + sign(Z.deltaY) * 0.05;
-        w.dispatchEvent(new Event("change"));
+      if (evt.target.closest(".box_strength")) {
+        var el = BOX.querySelector(".box_strength");
+        el.value = parseFloat(el.value) + sign(evt.deltaY) * 0.05;
+        el.dispatchEvent(new Event("change"));
       } else {
-        var w = BOX.querySelector(".box_trial");
-        w.value = parseInt(w.value) + sign(Z.deltaY);
-        w.dispatchEvent(new Event("change"));
+        var el = BOX.querySelector(".box_trial");
+        el.value = parseInt(el.value) + sign(evt.deltaY);
+        el.dispatchEvent(new Event("change"));
       }
-    } catch (T) {}
+    } catch (err3) {}
   }
 });
 setBtn("grid_mode", true);
 function plausible() {
-  var Z = window.location;
-  var h = window.document;
-  var v = window.localStorage;
-  var g = "https://plau.trueslow.com/api/event";
-  var x = v && v.plausible_ignore;
-  function J(q) {}
-  function G(q, R) {
-    if (/^localhost$|^127(\.[0-9]+){0,2}\.[0-9]+$|^\[::1?\]$/.test(Z.hostname) || Z.protocol === "file:") {
-      return J("localhost");
+  var loc = window.location;
+  var doc = window.document;
+  var storage = window.localStorage;
+  var apiUrl = "https://plau.trueslow.com/api/event";
+  var ignoreFlag = storage && storage.plausible_ignore;
+  function noop(eventName) {}
+  function sendEvent(eventName, options) {
+    if (/^localhost$|^127(\.[0-9]+){0,2}\.[0-9]+$|^\[::1?\]$/.test(loc.hostname) || loc.protocol === "file:") {
+      return noop("localhost");
     }
     if (!window._phantom && !window.__nightmare && !window.navigator.webdriver && !window.Cypress) {
-      if (x == "true") {
-        return J("localStorage flag");
+      if (ignoreFlag == "true") {
+        return noop("localStorage flag");
       }
-      var F = {
-        n: q,
-        u: Z.href,
+      var payload = {
+        n: eventName,
+        u: loc.href,
         d: "painthua.com",
-        r: h.referrer || null,
+        r: doc.referrer || null,
         w: window.innerWidth
       };
-      if (R && R.meta) {
-        F.m = JSON.stringify(R.meta);
+      if (options && options.meta) {
+        payload.m = JSON.stringify(options.meta);
       }
-      if (R && R.props) {
-        F.p = JSON.stringify(R.props);
+      if (options && options.props) {
+        payload.p = JSON.stringify(options.props);
       }
-      var P = new XMLHttpRequest();
-      P.open("POST", g, !0);
-      P.setRequestHeader("Content-Type", "text/plain");
-      P.send(JSON.stringify(F));
-      P.onreadystatechange = function () {
-        if (P.readyState == 4 && R && R.callback) {
-          R.callback();
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", apiUrl, !0);
+      xhr.setRequestHeader("Content-Type", "text/plain");
+      xhr.send(JSON.stringify(payload));
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && options && options.callback) {
+          options.callback();
         }
       };
     }
   }
-  var H = window.plausible && window.plausible.q || [];
-  window.plausible = G;
-  var f;
-  for (var T = 0; T < H.length; T++) {
-    G.apply(this, H[T]);
+  var queue = window.plausible && window.plausible.q || [];
+  window.plausible = sendEvent;
+  var fn;
+  for (var i = 0; i < queue.length; i++) {
+    sendEvent.apply(this, queue[i]);
   }
-  function N() {
-    if (f !== Z.pathname) {
-      f = Z.pathname;
-      G("pageview");
+  function trackPage() {
+    if (fn !== loc.pathname) {
+      fn = loc.pathname;
+      sendEvent("pageview");
     }
   }
-  var K;
-  var A = window.history;
-  if (A.pushState) {
-    K = A.pushState;
-    A.pushState = function () {
-      K.apply(this, arguments);
-      N();
+  var savedPath;
+  var histObj = window.history;
+  if (histObj.pushState) {
+    savedPath = histObj.pushState;
+    histObj.pushState = function () {
+      savedPath.apply(this, arguments);
+      trackPage();
     };
-    window.addEventListener("popstate", N);
+    window.addEventListener("popstate", trackPage);
   }
-  if (h.visibilityState === "prerender") {
-    h.addEventListener("visibilitychange", function () {
-      if (!f && h.visibilityState === "visible") {
-        N();
+  if (doc.visibilityState === "prerender") {
+    doc.addEventListener("visibilitychange", function () {
+      if (!fn && doc.visibilityState === "visible") {
+        trackPage();
       }
     });
   } else {
-    N();
+    trackPage();
   }
 }
 plausible();
