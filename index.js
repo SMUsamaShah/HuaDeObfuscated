@@ -58,7 +58,7 @@ function $c(el) {
   return el.classList;
 }
 $.parse = function (text) {
-  return text.replaceAll("L🖱️", "<img src=\"img/mouse_left.svg\" class=\"icon\">").replaceAll("R🖱️", "<img src=\"img/mouse_right.svg\" class=\"icon\">").replaceAll("🖱️wheel", "<img src=\"img/mouse_wheel.svg\" class=\"icon\">").replaceAll("🖱️", "<img src=\"img/mouse.svg\" class=\"icon\">");
+  return text.replaceAll("L🖱️", "<img src=\"docs/img/mouse_left.svg\" class=\"icon\">").replaceAll("R🖱️", "<img src=\"docs/img/mouse_right.svg\" class=\"icon\">").replaceAll("🖱️wheel", "<img src=\"docs/img/mouse_wheel.svg\" class=\"icon\">").replaceAll("🖱️", "<img src=\"docs/img/mouse.svg\" class=\"icon\">");
 };
 $.type = function (el) {
   el = typeof el === "string" ? $(el) : el;
