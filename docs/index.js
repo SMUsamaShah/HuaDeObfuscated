@@ -1,11 +1,7 @@
 "use strict";
 function mylog(eventName) {
   try {
-    postRaw("https://plau.trueslow.com/api/event", {
-      name: eventName,
-      url: window.location.href,
-      domain: "painthua.com"
-    });
+    clicky.log(eventName);
   } catch (err) {}
 }
 console.img = function (url) {
@@ -24,15 +20,6 @@ window.ceil = Math.ceil;
 window.pow = Math.pow;
 window.sqrt = Math.sqrt;
 window.sign = Math.sign;
-window.postRaw = function (url, data) {
-  return fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  });
-};
 window.post = function (url, data) {
   return fetch(url, {
     method: "POST",
@@ -1742,75 +1729,3 @@ SKETCH.addEventListener("wheel", function (evt) {
   }
 });
 setBtn("grid_mode", true);
-function plausible() {
-  var loc = window.location;
-  var doc = window.document;
-  var storage = window.localStorage;
-  var apiUrl = "https://plau.trueslow.com/api/event";
-  var ignoreFlag = storage && storage.plausible_ignore;
-  function noop(eventName) {}
-  function sendEvent(eventName, options) {
-    if (/^localhost$|^127(\.[0-9]+){0,2}\.[0-9]+$|^\[::1?\]$/.test(loc.hostname) || loc.protocol === "file:") {
-      return noop("localhost");
-    }
-    if (!window._phantom && !window.__nightmare && !window.navigator.webdriver && !window.Cypress) {
-      if (ignoreFlag == "true") {
-        return noop("localStorage flag");
-      }
-      var payload = {
-        n: eventName,
-        u: loc.href,
-        d: "painthua.com",
-        r: doc.referrer || null,
-        w: window.innerWidth
-      };
-      if (options && options.meta) {
-        payload.m = JSON.stringify(options.meta);
-      }
-      if (options && options.props) {
-        payload.p = JSON.stringify(options.props);
-      }
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", apiUrl, !0);
-      xhr.setRequestHeader("Content-Type", "text/plain");
-      xhr.send(JSON.stringify(payload));
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4 && options && options.callback) {
-          options.callback();
-        }
-      };
-    }
-  }
-  var queue = window.plausible && window.plausible.q || [];
-  window.plausible = sendEvent;
-  var fn;
-  for (var i = 0; i < queue.length; i++) {
-    sendEvent.apply(this, queue[i]);
-  }
-  function trackPage() {
-    if (fn !== loc.pathname) {
-      fn = loc.pathname;
-      sendEvent("pageview");
-    }
-  }
-  var savedPath;
-  var histObj = window.history;
-  if (histObj.pushState) {
-    savedPath = histObj.pushState;
-    histObj.pushState = function () {
-      savedPath.apply(this, arguments);
-      trackPage();
-    };
-    window.addEventListener("popstate", trackPage);
-  }
-  if (doc.visibilityState === "prerender") {
-    doc.addEventListener("visibilitychange", function () {
-      if (!fn && doc.visibilityState === "visible") {
-        trackPage();
-      }
-    });
-  } else {
-    trackPage();
-  }
-}
-plausible();
