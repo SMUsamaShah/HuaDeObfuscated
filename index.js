@@ -1,9 +1,4 @@
 "use strict";
-function mylog(eventName) {
-  try {
-    clicky.log(eventName);
-  } catch (err) {}
-}
 console.img = function (url) {
   var img = new Image();
   img.onload = function () {
@@ -1101,7 +1096,6 @@ CV.draw = function (boxX, boxY, boxW, boxH) {
     settings = Object.assign(settings, {
       denoising_strength: 1
     });
-    mylog("#draw/txt2img/" + boxW + "/" + boxH);
   } else {
     tmpCtx.drawImage(CV.mask, boxX, boxY, boxW, boxH, 0, 0, boxW, boxH);
     var maskDataUrl = tmpCanvas.toDataURL();
@@ -1120,7 +1114,6 @@ CV.draw = function (boxX, boxY, boxW, boxH) {
     if ($.isActive("i2i_mode")) {
       delete settings.mask;
     }
-    mylog("#draw/img2img/" + boxW + "/" + boxH);
   }
   try {
     var cloneBox = BOX.cloneNode(true);
@@ -1145,7 +1138,6 @@ CV.draw = function (boxX, boxY, boxW, boxH) {
   } catch (err2) {
     console.log(err2);
     var errMsg = err2.toString();
-    mylog("#draw/err/" + errMsg.substr(0, 100));
   }
 };
 CV.sendPrompt = function (prompt, boxEl) {
@@ -1235,7 +1227,6 @@ CV.sendPrompt = function (prompt, boxEl) {
       $.hide(BOX);
       $.show(boxEl.querySelector(".box_str"));
     }
-    mylog("#draw/done/" + url.w + "/" + url.h);
   };
   task.funBad = resultData => {
     delete App.task[taskId];
@@ -1252,7 +1243,6 @@ CV.sendPrompt = function (prompt, boxEl) {
     }
     $.error(imgDataUrl);
     setBtn("help_show", true);
-    mylog("#draw/err/" + imgIdx.substr(0, 100));
   };
   task.status = 0;
   task.timestamp = Date.now();
