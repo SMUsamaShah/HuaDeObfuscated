@@ -1202,7 +1202,7 @@ CV.sendPrompt = function (prompt, boxEl) {
     boxEl.setAttribute("out_img", imgIdx);
     boxEl.classList.add("decision_box");
     boxEl.querySelector(".box_remark").innerHTML = "";
-    boxEl.querySelector(".box_str").innerHTML = "<div class=\"box_input\" style=\"display:flex;align-items:center;\">\n    <button type=\"button\" data-id=\"box_confirm\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%\">✔️</span></button>\n    <button type=\"button\" data-id=\"box_retry\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%;font-weight:bold\">+<span class=\"box_retry_count\">1</span></span></button>\n    <span class=\"box_of\" style=\"height:3em;margin:0 0.5em;display:inline-flex;align-items:center;\"></span>\n    <button type=\"button\" data-id=\"box_prev\" style=\"height:3em;width:3em;\"><span style=\"font-size:150%\">🡄</span></button>\n    <button type=\"button\" data-id=\"box_next\" style=\"height:3em;width:3em;\"><span style=\"font-size:150%\">🡆</span></button>\n    <button type=\"button\" data-id=\"box_remove\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%\">🗑️</span></button>\n    <button type=\"button\" data-id=\"box_cancel\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%\">❌</span></button>\n    </div>";
+    boxEl.querySelector(".box_str").innerHTML = "<div class=\"box_input\" style=\"display:flex;align-items:center;\">\n    <button type=\"button\" data-id=\"box_confirm\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%\">✔️</span></button>\n    <button type=\"button\" data-id=\"box_retry\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%;font-weight:bold\">+<span class=\"box_retry_count\">1</span></span></button>\n    <button type=\"button\" data-id=\"box_info\" style=\"height:3em;width:3em;\" title=\"Show/hide generation parameters\"><span style=\"font-size:125%\">ℹ️</span></button>\n    <span class=\"box_of\" style=\"height:3em;margin:0 0.5em;display:inline-flex;align-items:center;\"></span>\n    <button type=\"button\" data-id=\"box_prev\" style=\"height:3em;width:3em;\"><span style=\"font-size:150%\">🡄</span></button>\n    <button type=\"button\" data-id=\"box_next\" style=\"height:3em;width:3em;\"><span style=\"font-size:150%\">🡆</span></button>\n    <button type=\"button\" data-id=\"box_remove\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%\">🗑️</span></button>\n    <button type=\"button\" data-id=\"box_cancel\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%\">❌</span></button>\n    </div>";
     boxEl.querySelector(".box_of").innerHTML = parseInt(boxEl.getAttribute("out_img")) + 1 + " of " + task.out_img.length;
     boxEl.onmousemove = mouseEvt => {
       $.hide(BOX);
@@ -1378,6 +1378,8 @@ $.onClick = function (evt) {
         CV.mainC.clearRect(boxSize.x, boxSize.y, boxSize.w, boxSize.h);
         CV.loadDataURL(CV.mainC, task.orig_img, boxSize.x, boxSize.y, boxSize.w, boxSize.h);
         shouldClose = true;
+      } else if (btnId == "box_info") {
+        $c(boxEl.querySelector(".box_prompt")).toggle("hide");
       }
       if (shouldClose) {
         delete App.task[parseInt(boxEl.getAttribute("task"))];
