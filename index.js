@@ -1412,6 +1412,7 @@ function initApp() {
   App.syncA1111();
   setBtn("grid_mode", true);
 }
+initApp();
 
 // ─── Event listeners ────────────────────────────────────────────────────────
 document.addEventListener("click", $.onClick);
@@ -1742,4 +1743,3 @@ SKETCH.addEventListener("wheel", function (evt) {
     } catch (err3) {}
   }
 });
-initApp();
