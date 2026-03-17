@@ -66,6 +66,24 @@ function onJSONblur(evt) {
   }
 }
 
+// Ensure a data URL has the "data:image/png;base64," prefix
+function ensureDataUrl(url) {
+  return url.startsWith("data:") ? url : "data:image/png;base64," + url;
+}
+// Reset generation progress state after a task completes or fails
+function resetProgress() {
+  App.progSafeCheck += 1;
+  App.progress = { progress: 0 };
+}
+// Update the "X of Y" counter in a result box
+function updateBoxOf(boxEl, task, idx) {
+  boxEl.querySelector(".box_of").innerHTML = idx + 1 + " of " + task.out_img.length;
+}
+// Build <option> HTML for a <select> from an array of objects
+function buildSelectOptions(data, key) {
+  return data.map(item => "<option>" + item[key] + "</option>").join("");
+}
+
 // ─── DOM helpers ────────────────────────────────────────────────────────────
 function $(selector) {
   return document.querySelector(selector);
@@ -552,10 +570,7 @@ CV.sendPrompt = function (prompt, boxEl) {
   task.funGood = resultData => {
     task.status = 2;
     task.timestamp = 1e+99;
-    App.progSafeCheck += 1;
-    App.progress = {
-      progress: 0
-    };
+    resetProgress();
     if (!("images" in resultData)) {
       if ("detail" in resultData) {
         $.error(resultData.detail.substr(0, 100));
@@ -567,9 +582,7 @@ CV.sendPrompt = function (prompt, boxEl) {
     }
     var imgIdx = -1;
     for (var imgDataUrl of resultData.images) {
-      if (!imgDataUrl.startsWith("data:")) {
-        imgDataUrl = "data:image/png;base64," + imgDataUrl;
-      }
+      imgDataUrl = ensureDataUrl(imgDataUrl);
       var startImgIdx = 0;
       if (!("out_img" in task)) {
         task.out_img = [imgDataUrl];
@@ -588,7 +601,7 @@ CV.sendPrompt = function (prompt, boxEl) {
     boxEl.classList.add("decision_box");
     boxEl.querySelector(".box_remark").innerHTML = "";
     boxEl.querySelector(".box_str").innerHTML = "<div class=\"box_input\" style=\"display:flex;align-items:center;\">\n    <button type=\"button\" data-id=\"box_confirm\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%\">✔️</span></button>\n    <button type=\"button\" data-id=\"box_retry\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%;font-weight:bold\">+<span class=\"box_retry_count\">1</span></span></button>\n    <button type=\"button\" data-id=\"box_info\" style=\"height:3em;width:3em;\" title=\"Show/hide generation parameters\"><span style=\"font-size:125%\">ℹ️</span></button>\n    <span class=\"box_of\" style=\"height:3em;margin:0 0.5em;display:inline-flex;align-items:center;\"></span>\n    <button type=\"button\" data-id=\"box_prev\" style=\"height:3em;width:3em;\"><span style=\"font-size:150%\">🡄</span></button>\n    <button type=\"button\" data-id=\"box_next\" style=\"height:3em;width:3em;\"><span style=\"font-size:150%\">🡆</span></button>\n    <button type=\"button\" data-id=\"box_remove\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%\">🗑️</span></button>\n    <button type=\"button\" data-id=\"box_cancel\" style=\"height:3em;width:3em;\"><span style=\"font-size:125%\">❌</span></button>\n    </div>";
-    boxEl.querySelector(".box_of").innerHTML = parseInt(boxEl.getAttribute("out_img")) + 1 + " of " + task.out_img.length;
+    updateBoxOf(boxEl, task, imgIdx);
     boxEl.onmousemove = mouseEvt => {
       $.hide(BOX);
       if (boxEl.querySelector(".box_input")) {
@@ -615,10 +628,7 @@ CV.sendPrompt = function (prompt, boxEl) {
   };
   task.funBad = resultData => {
     delete App.task[taskId];
-    App.progSafeCheck += 1;
-    App.progress = {
-      progress: 0
-    };
+    resetProgress();
     cancelFn();
     console.log(resultData);
     var imgIdx = resultData.toString();
@@ -648,10 +658,7 @@ CV.extraTask = function (scaleFactor) {
   };
   $.error("Running ESRGAN_4x to " + scaleFactor + "x... (transparency will become black)");
   post(apiUrl, prompt).then(result => {
-    var imgDataUrl = result.image;
-    if (!imgDataUrl.startsWith("data:")) {
-      imgDataUrl = "data:image/png;base64," + imgDataUrl;
-    }
+    var imgDataUrl = ensureDataUrl(result.image);
     var img = new Image();
     img.onload = function () {
       tmpCanvas = CV.new(boxSize.w * scaleFactor, boxSize.h * scaleFactor);
@@ -897,9 +904,7 @@ App.sync = function () {
               var curImg = prog.current_image;
               if (App.progImgBak != curImg) {
                 App.progImgBak = curImg;
-                if (!curImg.startsWith("data:")) {
-                  curImg = "data:image/png;base64," + curImg;
-                }
+                curImg = ensureDataUrl(curImg);
                 CV.loadDataURL(CV.mainC, curImg, boxPos.x, boxPos.y, boxPos.w, boxPos.h);
               }
             }
@@ -928,11 +933,7 @@ App.syncA1111 = function () {
     gget(serverUrl + "/sdapi/v1/samplers").then(data => {
       if (JSON.stringify(App.samplers) != JSON.stringify(data)) {
         App.samplers = data;
-        var optionsHtml = "";
-        for (var item of data) {
-          optionsHtml += "<option>" + item.name + "</option>";
-        }
-        $("#prompt_sampler").innerHTML = optionsHtml;
+        $("#prompt_sampler").innerHTML = buildSelectOptions(data, "name");
         onJSONblur({
           target: $("#prompt")
         });
@@ -941,11 +942,7 @@ App.syncA1111 = function () {
     gget(serverUrl + "/sdapi/v1/sd-models").then(data => {
       if (JSON.stringify(App.sd_models) != JSON.stringify(data)) {
         App.sd_models = data;
-        var optionsHtml = "";
-        for (var item of data) {
-          optionsHtml += "<option>" + item.title + "</option>";
-        }
-        $("#prompt_model").innerHTML = optionsHtml;
+        $("#prompt_model").innerHTML = buildSelectOptions(data, "title");
         try {
           $("#prompt_model").selectedIndex = App.sd_models.findIndex(function (modelIdx) {
             return modelIdx.title == App.optionNow.sd_model_checkpoint;
@@ -1302,13 +1299,13 @@ $.onClick = function (evt) {
           if (nextIdx != imgIdx) {
             CV.loadDataURL(CV.mainC, task.out_img[nextIdx], boxSize.x, boxSize.y, boxSize.w, boxSize.h);
             boxEl.setAttribute("out_img", nextIdx);
-            boxEl.querySelector(".box_of").innerHTML = nextIdx + 1 + " of " + task.out_img.length;
+            updateBoxOf(boxEl, task, nextIdx);
           }
         } else {
           var imgIdx = parseInt(boxEl.getAttribute("out_img"));
           task.out_img.splice(imgIdx, 1);
           CV.loadDataURL(CV.mainC, task.out_img[imgIdx], boxSize.x, boxSize.y, boxSize.w, boxSize.h);
-          boxEl.querySelector(".box_of").innerHTML = imgIdx + 1 + " of " + task.out_img.length;
+          updateBoxOf(boxEl, task, imgIdx);
         }
       } else if (isPrev) {
         var imgIdx = parseInt(boxEl.getAttribute("out_img"));
@@ -1324,7 +1321,7 @@ $.onClick = function (evt) {
             CV.loadDataURL(CV.mainC, task.orig_img, boxSize.x, boxSize.y, boxSize.w, boxSize.h);
           }
           boxEl.setAttribute("out_img", nextIdx);
-          boxEl.querySelector(".box_of").innerHTML = nextIdx + 1 + " of " + task.out_img.length;
+          updateBoxOf(boxEl, task, nextIdx);
         }
       } else if (btnId == "box_confirm") {
         CV.maskC.clearRect(boxSize.x, boxSize.y, boxSize.w, boxSize.h);
