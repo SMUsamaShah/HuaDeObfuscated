@@ -833,6 +833,9 @@ App.sync = function () {
       prompt.denoising_strength = parseFloat(BOX.querySelector(".box_strength").value);
     } catch (err) {}
     promptHtml = stringify(prompt).replace("{\n\"", "<span style=\"color:#aaa;\">").replace("\n}", "</span>").replaceAll("\": \"", "</span> <span style=\"color:#eee;\">").replaceAll("\": ", "</span> <span style=\"color:#eee;\">").replaceAll("\",\n\"", "</span>\n<span style=\"color:#aaa;\">").replaceAll(",\n\"", "</span>\n<span style=\"color:#aaa;\">").trim().replaceAll("\n", "<br>");
+    if (App.optionNow && App.optionNow.sd_model_checkpoint) {
+      promptHtml = "<span style=\"color:#aaa;\">model</span> <span style=\"color:#eee;\">" + App.optionNow.sd_model_checkpoint + "</span><br>" + promptHtml;
+    }
   } else {
     strHtml = "<select class=\"box_select\">\n    <option>🧹Erase</option><option>🍀Move</option><option>👯Clone</option>\n    <option>🌟Scale2x</option><option>🌟Scale3x</option><option>🌟Scale4x</option>\n    <option>🌑Mask</option><option>🌕Unmask</option>\n    </select> <span>L🖱️ confirm, R🖱️ cancel</span>";
   }
