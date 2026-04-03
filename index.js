@@ -533,7 +533,8 @@ CV.draw = function (boxX, boxY, boxW, boxH) {
       status: -1,
       timestamp: 1e+99,
       prompt: settings,
-      orig_img: origImg
+      orig_img: origImg,
+      model: App.modelTarget
     };
     cloneBox.setAttribute("task", taskId);
     SKETCH.appendChild(cloneBox);
@@ -833,9 +834,6 @@ App.sync = function () {
       prompt.denoising_strength = parseFloat(BOX.querySelector(".box_strength").value);
     } catch (err) {}
     promptHtml = stringify(prompt).replace("{\n\"", "<span style=\"color:#aaa;\">").replace("\n}", "</span>").replaceAll("\": \"", "</span> <span style=\"color:#eee;\">").replaceAll("\": ", "</span> <span style=\"color:#eee;\">").replaceAll("\",\n\"", "</span>\n<span style=\"color:#aaa;\">").replaceAll(",\n\"", "</span>\n<span style=\"color:#aaa;\">").trim().replaceAll("\n", "<br>");
-    if (App.modelTarget) {
-      promptHtml = "<span style=\"color:#aaa;\">model</span> <span style=\"color:#eee;\">" + App.modelTarget + "</span><br>" + promptHtml;
-    }
   } else {
     strHtml = "<select class=\"box_select\">\n    <option>🧹Erase</option><option>🍀Move</option><option>👯Clone</option>\n    <option>🌟Scale2x</option><option>🌟Scale3x</option><option>🌟Scale4x</option>\n    <option>🌑Mask</option><option>🌕Unmask</option>\n    </select> <span>L🖱️ confirm, R🖱️ cancel</span>";
   }
@@ -1287,6 +1285,16 @@ $.onClick = function (evt) {
       }
       if (isRetry) {
         prompt.n_iter = parseInt(boxEl.querySelector(".box_retry_count").innerHTML);
+        if (task.model && task.model != App.modelTarget) {
+          var modelEl = $("#prompt_model");
+          for (var i = 0; i < modelEl.options.length; i++) {
+            if (modelEl.options[i].text == task.model) {
+              modelEl.selectedIndex = i;
+              break;
+            }
+          }
+          App.syncModel();
+        }
         CV.sendPrompt(prompt, boxEl);
         if ("init_images" in prompt) {
           CV.loadDataURL(CV.mainC, prompt.init_images[0], boxSize.x, boxSize.y, boxSize.w, boxSize.h);
@@ -1334,7 +1342,16 @@ $.onClick = function (evt) {
         CV.loadDataURL(CV.mainC, task.orig_img, boxSize.x, boxSize.y, boxSize.w, boxSize.h);
         shouldClose = true;
       } else if (btnId == "box_info") {
-        $c(boxEl.querySelector(".box_prompt")).toggle("hide");
+        var promptEl = boxEl.querySelector(".box_prompt");
+        if (promptEl.classList.contains("hide") && task.model) {
+          var modelLineEl = promptEl.querySelector(".model_line");
+          if (!modelLineEl) {
+            promptEl.insertAdjacentHTML("afterbegin", "<span class=\"model_line\"></span>");
+            modelLineEl = promptEl.querySelector(".model_line");
+          }
+          modelLineEl.innerHTML = "<span style=\"color:#aaa;\">model</span> <span style=\"color:#eee;\">" + task.model + "</span><br>";
+        }
+        $c(promptEl).toggle("hide");
       }
       if (shouldClose) {
         delete App.task[parseInt(boxEl.getAttribute("task"))];
